@@ -19,7 +19,7 @@ KEGG Database API - Get the whole pathway ID from KEGG database.
 Get the pathway ID and annoation of a given KEGG species ID.
 }
 \examples{
-getKEGGPathAnno('hsa')
+hasPath <- getKEGGPathAnno('hsa')
 }
 \author{
 Yulong Niu \email{niuylscu@gmail.com}

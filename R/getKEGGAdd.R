@@ -6,11 +6,11 @@
 ##' @param n The number of CPUs or processors, and the default value is 4.
 ##' @return The corresponding NCBI Taxonomy ID in character vector.
 ##' @examples
-##' # get human and Ecoli NCBI taxonomy ID with 2 threads
+##' ## get human and Ecoli NCBI taxonomy ID with 2 threads
 ##' transPhyloKEGG2NCBI(c('hsa', 'eco', 'ath', 'smu'), n = 2)
 ##' 
 ##' \dontrun{
-##' # transfer all KEGG species ID to NCBI taxonomy ID
+##' ## transfer all KEGG species ID to NCBI taxonomy ID
 ##' wKEGGSpe <- getKEGGPhylo(whole = TRUE)
 ##' wNCBISpe <- transPhyloKEGG2NCBI(wKEGGSpe[, 2])
 ##' }
@@ -20,18 +20,19 @@
 ##' @importFrom foreach foreach %dopar%
 ##' @export
 ##'
+##' 
 transPhyloKEGG2NCBI <- function(KEGGID, n = 4){
 
   registerDoMC(n)
 
   getSingleTax <- function (KEGGspeID) {
-    # USE: get KEGGSpeID webpage
-    # INPUT: 'KEGGID' is the KEGG species ID.
-    # OUTPUT: The NCBI taxonomy ID.
+    ## USE: get KEGGSpeID webpage
+    ## INPUT: 'KEGGID' is the KEGG species ID.
+    ## OUTPUT: The NCBI taxonomy ID.
     KEGGLink <- paste('http://www.genome.jp/kegg-bin/show_organism?org=', KEGGspeID, sep = '')
     KEGGWeb <- getURL(KEGGLink)
 
-    # get Taxonomy ID. The taxonomy ID is in the web-link like 'http://www.ncbi.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=593907'
+    ## get Taxonomy ID. The taxonomy ID is in the web-link like 'http://www.ncbi.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=593907'
     taxIDLink <- gregexpr('wwwtax\\.cgi\\?mode=Info&id=\\d+', KEGGWeb)
     taxIDLink <- getcontent(KEGGWeb, taxIDLink[[1]])
     taxID <- gregexpr('\\d+', taxIDLink)
@@ -116,7 +117,7 @@ singleTIDSeq <- function(TID, seqType = 'aaseq') {
 ##' 
 getKEGGTIDGeneSeq <- function(TIDs, seqType = 'aaseq', n = 4) {
 
-  # register mutiple cores
+  ## register mutiple cores
   registerDoMC(n)
   
   seqMulRes <- foreach(i = 1:length(TIDs), .combine = append) %dopar% {
@@ -281,5 +282,4 @@ getKEGGMotifList2 <- function(motifName) {
 
   return(unipVec)
 }
-
 

@@ -20,9 +20,12 @@ Get the pathway and genes according to KEGG species ID.
 }
 \examples{
 \dontrun{
-getKEGGPathGenes('hsa')}
+hasPathGenes <- getKEGGPathGenes('hsa')}
 }
 \author{
 Yulong Niu \email{niuylscu@gmail.com}
+}
+\references{
+\url{http://www.kegg.jp/kegg/rest/}
 }
 

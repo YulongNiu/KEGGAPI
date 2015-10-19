@@ -23,15 +23,15 @@ KEGG Database API - Get the nucleotide acid and amino acid sequences
 Get the protein and gene sequences in fasta format. This function support mutiple querys.
 }
 \examples{
-# two amino acid seqences from different sepecies with 2 threads.
+## two amino acid seqences from different sepecies with 2 threads.
 twoAASeqs <- getKEGGGeneSeq(c('mja:MJ_0011', 'hsa:10458'), n = 2)
 \dontrun{
-# export fasta format files
+## export fasta format files
 require('Biostrings')
 writeXStringSet(twoAASeqs, 'twoAASeqs.fasta')}
 
 \dontrun{
-# more examples
+## more examples
 twoNTSeqs <- getKEGGGeneSeq(c('shy:SHJG_7159', 'shy:SHJG_7160'), 'ntseq')
 mutilAASeqs <- getKEGGGeneSeq(c('eco:b0202', 'eco:b0203', 'eco:b0204',
 'eco:b0205', 'eco:b0206', 'eco:b0216', 'eco:b0244',
@@ -39,7 +39,7 @@ mutilAASeqs <- getKEGGGeneSeq(c('eco:b0202', 'eco:b0203', 'eco:b0204',
 'eco:b3297'))}
 
 \dontrun{
-# get the whole E.coli genome protein seqences
+## get the whole E.coli genome protein seqences
 ecoProIDs <- getProID('eco')
 ecoGenomePro <- getKEGGGeneSeq(ecoProIDs[, 1])}
 }

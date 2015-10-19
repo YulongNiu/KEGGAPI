@@ -49,22 +49,22 @@ Convert gene identifiers or chemical substance identifiers between KEGG database
 The IDs and database convert is controlled by the argument "convertType".
 }
 \examples{
-# convert database from KEGG to outside databases.
+## convert database from KEGG to outside databases.
 convKEGG('ncbi-geneid', 'eco')
 convKEGG('pubchem', 'drug')
 
 \dontrun{
-# convert database from outside databases to KEGG.
+## convert database from outside databases to KEGG.
 convKEGG('smu', 'uniprot')
 convKEGG('glycan', 'chebi')}
 
-# convert identities from KEGG to outside database.
-# mutiple organism convert.
+## convert identities from KEGG to outside database.
+## mutiple organism convert.
 convKEGG('ncbi-gi', c('hsa:10458', 'ece:Z5100'), convertType = 'identity', n = 2)
 convKEGG('pubchem', 'cpd:C00004', convertType = 'identity', n = 2)
 
-# convert identities from outside databases to KEGG.
-# the organism code is unknown.
+## convert identities from outside databases to KEGG.
+## the organism code is unknown.
 convKEGG('genes', 'ncbi-geneid:3113320', convertType = 'identity', n = 2)
 convKEGG('genes', 'ncbi-gi:54293358', convertType = 'identity', n = 2)
 }

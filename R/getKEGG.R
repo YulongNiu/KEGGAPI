@@ -5,7 +5,7 @@
 ##'
 ##' @title Get species list from KEGG.
 ##' @name getKEGGPhylo
-##' @param speList The species list that is a vector like "c('hsa', 'eco')". The input 'speList' should be consistent with the parameter 'speType'.
+##' @param speList The species list that is a vector like "c('hsa', 'eco')". The input "speList" should be consistent with the parameter "speType".
 ##' @param speType It supports five types: "KEGG", "Tnum", "regexpr", and "phylo".
 ##' KEGG type is a three or four letters, for exmaple "hsa" is the KEGG ID for Homo sapiens,
 ##" while the corresponding T number is "T01001".
@@ -17,13 +17,13 @@
 ##' and the default value is FALSE.
 ##' @return Matrix of species information.
 ##' @examples
-##' # search species list from KEGG ID
+##' ## search species list from KEGG ID
 ##' getKEGGPhylo(c('hsa', 'eco'))
-##' # search species whose names include 'Escherichia coli'
+##' ## search species whose names include 'Escherichia coli'
 ##' getKEGGPhylo('Escherichia coli', speType = 'regexpr')
-##' # search species whose class is 'Mammals'
+##' ## search species whose class is 'Mammals'
 ##' getKEGGPhylo('Mammals', speType = 'phylo')
-##' # get whole KEGG species information table
+##' ## get whole KEGG species information table
 ##' getKEGGPhylo(whole = TRUE)
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
@@ -36,7 +36,7 @@ getKEGGPhylo <- function(speList, speType = 'KEGG', whole = FALSE){
     stop('"speType" now only supports "NCBI", "KEGG", "Tnum", "regexpr", and "phylo".')
   } else {}
 
-  # get whole KEGG species information
+  ## get whole KEGG species information
   speAnno <- webTable('http://rest.kegg.jp/list/organism', ncol = 4)
 
   colnames(speAnno) <- c('TID', 'KEGGID', 'LatinName', 'Phylo')
@@ -69,7 +69,8 @@ getKEGGPhylo <- function(speList, speType = 'KEGG', whole = FALSE){
 ##' @title Get KEGG orthology.
 ##' @param KOID The KEGG orthology ID.
 ##' @return A character vector of KEGG gene IDs
-##' @examples getKEGGKO('K02110')
+##' @examples
+##' KOMat <- getKEGGKO('K02110')
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
@@ -77,18 +78,14 @@ getKEGGPhylo <- function(speList, speType = 'KEGG', whole = FALSE){
 ##' 
 getKEGGKO <- function(KOID){
 
-  # get KO webpage
+  ## get KO webpage
   url <- paste('http://rest.kegg.jp/link/genes/', KOID, sep = '')
 
-  # get KO list
+  ## get KO list
   KOWebMat <- webTable(url, ncol = 2)
 
   geneIDs <- KOWebMat[, 2]
-  ## # seperate the species and genes
-  ## KOMat <- unlist(strsplit(KOWebMat[, 2], split = ':', fixed = TRUE))
-  ## KOMat <- matrix(KOMat, ncol = 2, byrow = TRUE)
-  ## colnames(KOMat) <- c('speID', 'geneID')
-
+  
   return(geneIDs)
 
 }
@@ -100,7 +97,8 @@ getKEGGKO <- function(KOID){
 ##' @title List pathway of a given species ID
 ##' @param KEGGspec The KEGG species ID. Only one species ID once input.
 ##' @return A matrix of pathway ID and annotation.
-##' @examples getKEGGPathAnno('hsa')
+##' @examples
+##' hasPath <- getKEGGPathAnno('hsa')
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
@@ -108,14 +106,9 @@ getKEGGKO <- function(KOID){
 ##'
 getKEGGPathAnno <- function(KEGGspec){
 
-  # get KEGG pathway annotation list
+  ## get KEGG pathway annotation list
   url <- paste('http://rest.kegg.jp/list/pathway/', KEGGspec, sep = '')
   pathAnno <- webTable(url, ncol = 2)
-
-  ## # the transfer the pathname of 'path:hsa00010' to 'hsa00010'.
-  ## pathID <- pathAnno[, 1]
-  ## pathID <- sapply(strsplit(pathID, split = ':', fixed = TRUE), '[', 2)
-  ## pathAnno[, 1] <- pathID
 
   colnames(pathAnno) <- c('pathID', 'Annotation')
 
@@ -131,13 +124,14 @@ getKEGGPathAnno <- function(KEGGspec){
 ##' @return A List named with KEGG pathway IDs, and each element of the list contains the KEGG gene IDs.
 ##' @examples
 ##' \dontrun{
-##' getKEGGPathGenes('hsa')}
+##' hasPathGenes <- getKEGGPathGenes('hsa')}
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
+##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
 ##'
 getKEGGPathGenes <- function(KEGGspec){
 
-  # get KEGG pathway list
+  ## get KEGG pathway list
   url <- paste('http://rest.kegg.jp/link/', KEGGspec, '/pathway',  sep = '')
 
   pathAnno <- webTable(url, ncol = 2)
@@ -153,31 +147,33 @@ getKEGGPathGenes <- function(KEGGspec){
   return(pathList)
 }
 
+
 ##' KEGG Database API - Get the whole KEGG IDs from one species.
-##'
-##' Get the KEGG protein ID list and annotation.
-##' @title Get whole KEGG IDs and annotation
-##' @param KEGGspec KEGSS species org code or T number , for example 'hsa' or 'T01001'.
+##"
+##" Get the KEGG protein ID list and annotation.
+##" @title Get whole KEGG IDs and annotation
+##" @param KEGGspec KEGSS species org code or T number , for example "hsa" or "T01001".
 ##' @return A matrix of KEGG IDs and annotation
 ##' @examples
-##' # KEGG org cord
+##' ## KEGG org cord
 ##' getProID('eco')
 ##'
-##' # KEGG T number
+##' ## KEGG T number
 ##' getProID('T00007')
 ##'
-##' # KEGG T number with empty elements
+##' ## KEGG T number with empty elements
 ##' getProID('T10004')
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
+##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
 ##'
 ##' 
 getProID <- function(KEGGspec){
   
-  # get KEGG ID annotation list
+  ## get KEGG ID annotation list
   url <- paste('http://rest.kegg.jp/list/', KEGGspec, sep = '')
 
-  # transfer webpage into a matrix
+  ## transfer webpage into a matrix
   speIDAnno <- webTable(url, ncol = 2)
 
   return(speIDAnno)
@@ -194,15 +190,15 @@ getProID <- function(KEGGspec){
 ##' @param n The number of CPUs or processors, and the default value is 4.
 ##' @return A BStringSet 
 ##' @examples
-##' # two amino acid seqences from different sepecies with 2 threads.
+##' ## two amino acid seqences from different sepecies with 2 threads.
 ##' twoAASeqs <- getKEGGGeneSeq(c('mja:MJ_0011', 'hsa:10458'), n = 2)
 ##' \dontrun{
-##' # export fasta format files
+##' ## export fasta format files
 ##' require('Biostrings')
 ##' writeXStringSet(twoAASeqs, 'twoAASeqs.fasta')}
 ##'
 ##' \dontrun{
-##' # more examples
+##' ## more examples
 ##' twoNTSeqs <- getKEGGGeneSeq(c('shy:SHJG_7159', 'shy:SHJG_7160'), 'ntseq')
 ##' mutilAASeqs <- getKEGGGeneSeq(c('eco:b0202', 'eco:b0203', 'eco:b0204',
 ##' 'eco:b0205', 'eco:b0206', 'eco:b0216', 'eco:b0244',
@@ -210,7 +206,7 @@ getProID <- function(KEGGspec){
 ##' 'eco:b3297'))}
 ##' 
 ##' \dontrun{
-##' # get the whole E.coli genome protein seqences
+##' ## get the whole E.coli genome protein seqences
 ##' ecoProIDs <- getProID('eco')
 ##' ecoGenomePro <- getKEGGGeneSeq(ecoProIDs[, 1])}
 ##' @importFrom RCurl getURL
@@ -226,13 +222,13 @@ getProID <- function(KEGGspec){
 ##' 
 getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 4){
 
-  # register mutiple cores
+  ## register mutiple cores
   registerDoMC(n)
 
   doTen <- function(tenWebSeq, seqTypeBio = seqType){
-    # USE: a temprary function to deal with the return web "10 seqence", and it also for less ten or without coding sequence. The basic idea to split sequences is by the marker of '(A)' for amino acid sequences and '(N)' for nucleotide sequences.
-    # INPUT: return results from function getURL()
-    # OUTPUT: BStingSet or NA (for the case one gene has no cording protein sequence)
+    ## USE: a temprary function to deal with the return web "10 seqence", and it also for less ten or without coding sequence. The basic idea to split sequences is by the marker of '(A)' for amino acid sequences and '(N)' for nucleotide sequences.
+    ## INPUT: return results from function getURL()
+    ## OUTPUT: BStingSet or NA (for the case one gene has no cording protein sequence)
     if (nchar(tenWebSeq) != 0){
       splitTen <- unlist(strsplit(tenWebSeq, split = '\n', fixed = TRUE))
       if (seqTypeBio == 'aaseq') {
@@ -241,11 +237,11 @@ getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 4){
       else if (seqTypeBio == 'ntseq') {
         namePoint <- which(grepl(' \\(N\\)', splitTen))
       }
-      # sequence start point
+      ## sequence start point
       startPoint <- namePoint + 1
       endPoint <- c(namePoint[-1] - 1, length(splitTen))
     } else {
-      # gene without coding sequence
+      ## gene without coding sequence
       return(NULL)
     }
 
@@ -253,7 +249,7 @@ getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 4){
       proSeqName <- splitTen[namePoint[i]]
       proSeqName <- substring(proSeqName, 2)
       proSeq <- paste(splitTen[startPoint[i] : endPoint[i]], collapse = '')
-      # to BStringSet
+      ## to BStringSet
       proSeqBS <- BStringSet(proSeq)
       names(proSeqBS) <- proSeqName
       return(proSeqBS)
@@ -262,15 +258,15 @@ getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 4){
     return(tenSeqBS)
   }
 
-  # cut the input 'KEGGID' into 10
+  ## cut the input 'KEGGID' into 10
   cutMat <- CutSeqEqu(length(KEGGID), 10)
 
-  # deal with ten sequences each time
+  ## deal with ten sequences each time
   print(paste('The input ID length is ', length(KEGGID), '.', sep = ''))
   proSeq <- foreach(i = cutMat[1, ], j = cutMat[2, ], .combine = append) %dopar% {
     print(paste('Get ', j , ' proteins.'))
     if (i == j){
-      # only one input KEGG ID
+      ## only one input KEGG ID
       linkKEGGPro <- paste('http://rest.kegg.jp/get/', KEGGID[i], '/', seqType, sep = '')
     } else {
       mergeID <- paste(KEGGID[i:j], collapse = "+")
@@ -322,22 +318,22 @@ getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 4){
 ##' @inheritParams getKEGGGeneSeq
 ##' @return A matrix that the first column is "targetDB"
 ##' @examples
-##' # convert database from KEGG to outside databases.
+##' ## convert database from KEGG to outside databases.
 ##' convKEGG('ncbi-geneid', 'eco')
 ##' convKEGG('pubchem', 'drug')
 ##' 
 ##' \dontrun{
-##' # convert database from outside databases to KEGG.
+##' ## convert database from outside databases to KEGG.
 ##' convKEGG('smu', 'uniprot')
 ##' convKEGG('glycan', 'chebi')}
 ##'
-##' # convert identities from KEGG to outside database.
-##' # mutiple organism convert.
+##' ## convert identities from KEGG to outside database.
+##' ## mutiple organism convert.
 ##' convKEGG('ncbi-gi', c('hsa:10458', 'ece:Z5100'), convertType = 'identity', n = 2)
 ##' convKEGG('pubchem', 'cpd:C00004', convertType = 'identity', n = 2)
 ##'
-##' # convert identities from outside databases to KEGG.
-##' # the organism code is unknown.
+##' ## convert identities from outside databases to KEGG.
+##' ## the organism code is unknown.
 ##' convKEGG('genes', 'ncbi-geneid:3113320', convertType = 'identity', n = 2)
 ##' convKEGG('genes', 'ncbi-gi:54293358', convertType = 'identity', n = 2)
 ##' @importFrom foreach foreach %dopar%

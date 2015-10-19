@@ -7,7 +7,7 @@
 getKEGGPhylo(speList, speType = "KEGG", whole = FALSE)
 }
 \arguments{
-\item{speList}{The species list that is a vector like "c('hsa', 'eco')". The input 'speList' should be consistent with the parameter 'speType'.}
+\item{speList}{The species list that is a vector like "c('hsa', 'eco')". The input "speList" should be consistent with the parameter "speType".}
 
 \item{speType}{It supports five types: "KEGG", "Tnum", "regexpr", and "phylo".
 KEGG type is a three or four letters, for exmaple "hsa" is the KEGG ID for Homo sapiens,}
@@ -26,13 +26,13 @@ Get the phylogenetic information of given species.
 It supports both batch input and regular expression search.
 }
 \examples{
-# search species list from KEGG ID
+## search species list from KEGG ID
 getKEGGPhylo(c('hsa', 'eco'))
-# search species whose names include 'Escherichia coli'
+## search species whose names include 'Escherichia coli'
 getKEGGPhylo('Escherichia coli', speType = 'regexpr')
-# search species whose class is 'Mammals'
+## search species whose class is 'Mammals'
 getKEGGPhylo('Mammals', speType = 'phylo')
-# get whole KEGG species information table
+## get whole KEGG species information table
 getKEGGPhylo(whole = TRUE)
 }
 \author{

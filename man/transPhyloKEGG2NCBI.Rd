@@ -21,11 +21,11 @@ KEGG Database Additional API - Get the NCBI taxonomy ID from a given KEGG ID
 NCBI taxonomy ID is used as unique ID accoss KEGG and BioCyc databases. This functions is used to get the corresponding NCBI Taxonomy ID from KEGG.
 }
 \examples{
-# get human and Ecoli NCBI taxonomy ID with 2 threads
+## get human and Ecoli NCBI taxonomy ID with 2 threads
 transPhyloKEGG2NCBI(c('hsa', 'eco', 'ath', 'smu'), n = 2)
 
 \dontrun{
-# transfer all KEGG species ID to NCBI taxonomy ID
+## transfer all KEGG species ID to NCBI taxonomy ID
 wKEGGSpe <- getKEGGPhylo(whole = TRUE)
 wNCBISpe <- transPhyloKEGG2NCBI(wKEGGSpe[, 2])
 }

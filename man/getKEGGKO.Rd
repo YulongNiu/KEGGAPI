@@ -19,7 +19,7 @@ KEGG Database API - Get the KEGG orthology list.
 Get the KEGG orthology list by a given KEGG KO ID.
 }
 \examples{
-getKEGGKO('K02110')
+KOMat <- getKEGGKO('K02110')
 }
 \author{
 Yulong Niu \email{niuylscu@gmail.com}
