@@ -20,8 +20,11 @@ Get a R matrix object if the weblink returned as a matrix.
 \details{
 If the web return a matrix, use this function to extract it as a R matrix object. An empty element is used to represent a "NA" in KEGG. So the empty web element is set to "NA" according the "ncol" parameter.
 }
+\examples{
+pathUrl <- 'http://rest.kegg.jp/list/pathway'
+keggPath <- webTable(pathUrl, ncol = 2)
+}
 \author{
 Yulong Niu \email{niuylscu@gmail.com}
 }
-\keyword{internal}
 

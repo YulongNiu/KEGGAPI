@@ -8,11 +8,11 @@
 ##' @param speList The species list that is a vector like "c('hsa', 'eco')". The input "speList" should be consistent with the parameter "speType".
 ##' @param speType It supports five types: "KEGG", "Tnum", "regexpr", and "phylo".
 ##' KEGG type is a three or four letters, for exmaple "hsa" is the KEGG ID for Homo sapiens,
-##" while the corresponding T number is "T01001".
-##" The "regexpr" is used for regulare expression search with the Latin name ("Escherichia coli"), sub-species name ("K-12 MG1655"), and common name ("human").
-##" The "phylo" uses phylogentic orders for search, and it supports "Domain" (either "Eukaryotes" or "Prokaryotes"), "Kingdom" ("Animals"), "phylum" ("Vertebrates"), and "class" ("Mammals").
-##" But it does not support mixed "KEGG".
-##" Attention: Mutiple KEGG species ID may correspond to one taxonomy ID, for exmaple "lph" and "lpo" to "91891"
+##' while the corresponding T number is "T01001".
+##' The "regexpr" is used for regulare expression search with the Latin name ("Escherichia coli"), sub-species name ("K-12 MG1655"), and common name ("human").
+##' The "phylo" uses phylogentic orders for search, and it supports "Domain" (either "Eukaryotes" or "Prokaryotes"), "Kingdom" ("Animals"), "phylum" ("Vertebrates"), and "class" ("Mammals").
+##' But it does not support mixed "KEGG".
+##' Attention: Mutiple KEGG species ID may correspond to one taxonomy ID, for exmaple "lph" and "lpo" to "91891"
 ##' @param whole Whether or not get the whole KEGG species list,
 ##' and the default value is FALSE.
 ##' @return Matrix of species information.
@@ -149,10 +149,10 @@ getKEGGPathGenes <- function(KEGGspec){
 
 
 ##' KEGG Database API - Get the whole KEGG IDs from one species.
-##"
-##" Get the KEGG protein ID list and annotation.
-##" @title Get whole KEGG IDs and annotation
-##" @param KEGGspec KEGSS species org code or T number , for example "hsa" or "T01001".
+##'
+##' Get the KEGG protein ID list and annotation.
+##' @title Get whole KEGG IDs and annotation
+##' @param KEGGspec KEGSS species org code or T number , for example "hsa" or "T01001".
 ##' @return A matrix of KEGG IDs and annotation
 ##' @examples
 ##' ## KEGG org cord

@@ -20,8 +20,12 @@ Miscellaneous - Retreive grepexpr content
 \details{
 Retreive the content from the output of grepexpr() function.
 }
+\examples{
+testStr <- 'wwwtax.cgi?mode=Info&id=593907'
+regList <- gregexpr('\\\\d+', testStr)
+getcontent(testStr, regList[[1]])
+}
 \author{
 Yulong Niu \email{niuylscu@gmail.com}
 }
-\keyword{internal}
 

@@ -2,15 +2,21 @@
 % Please edit documentation in R/getKEGG.R
 \name{getProID}
 \alias{getProID}
-\title{KEGG Database API - Get the whole KEGG IDs from one species.}
+\title{Get whole KEGG IDs and annotation}
 \usage{
 getProID(KEGGspec)
+}
+\arguments{
+\item{KEGGspec}{KEGSS species org code or T number , for example "hsa" or "T01001".}
 }
 \value{
 A matrix of KEGG IDs and annotation
 }
 \description{
 KEGG Database API - Get the whole KEGG IDs from one species.
+}
+\details{
+Get the KEGG protein ID list and annotation.
 }
 \examples{
 ## KEGG org cord

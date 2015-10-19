@@ -5,9 +5,12 @@
 ##' @param url The weblink.
 ##' @param ncol The column number of the matrix.
 ##' @return A R matrix
+##' @examples
+##' pathUrl <- 'http://rest.kegg.jp/list/pathway'
+##' keggPath <- webTable(pathUrl, ncol = 2)
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom RCurl getURL
-##' @keywords internal
+##' @export
 ##'
 ##' 
 webTable <- function(url, ncol) {
@@ -43,9 +46,17 @@ webTable <- function(url, ncol) {
 ##' @param s Input string.
 ##' @param g A list that output from grepexpr()
 ##' @return A string
+##' @examples
+##' testStr <- 'wwwtax.cgi?mode=Info&id=593907'
+##' regList <- gregexpr('\\d+', testStr)
+##' getcontent(testStr, regList[[1]])
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
-##' @keywords internal
+##' @export
+##'
 ##' 
 getcontent <- function(s, g) {
-  substring(s, g, g+attr(g,'match.length')-1)
+  
+  subText <- substring(s, g, g + attr(g, 'match.length') - 1)
+
+  return(subText)
 }

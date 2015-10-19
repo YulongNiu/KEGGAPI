@@ -10,7 +10,12 @@ getKEGGPhylo(speList, speType = "KEGG", whole = FALSE)
 \item{speList}{The species list that is a vector like "c('hsa', 'eco')". The input "speList" should be consistent with the parameter "speType".}
 
 \item{speType}{It supports five types: "KEGG", "Tnum", "regexpr", and "phylo".
-KEGG type is a three or four letters, for exmaple "hsa" is the KEGG ID for Homo sapiens,}
+KEGG type is a three or four letters, for exmaple "hsa" is the KEGG ID for Homo sapiens,
+while the corresponding T number is "T01001".
+The "regexpr" is used for regulare expression search with the Latin name ("Escherichia coli"), sub-species name ("K-12 MG1655"), and common name ("human").
+The "phylo" uses phylogentic orders for search, and it supports "Domain" (either "Eukaryotes" or "Prokaryotes"), "Kingdom" ("Animals"), "phylum" ("Vertebrates"), and "class" ("Mammals").
+But it does not support mixed "KEGG".
+Attention: Mutiple KEGG species ID may correspond to one taxonomy ID, for exmaple "lph" and "lpo" to "91891"}
 
 \item{whole}{Whether or not get the whole KEGG species list,
 and the default value is FALSE.}
