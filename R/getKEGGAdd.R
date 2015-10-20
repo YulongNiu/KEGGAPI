@@ -2,8 +2,8 @@
 ##'
 ##' NCBI taxonomy ID is used as unique ID accoss KEGG and BioCyc databases. This functions is used to get the corresponding NCBI Taxonomy ID from KEGG.
 ##' @title Get NCBI Taxonomy ID From KEGG ID
-##' @param KEGGID The KEGG support multiple species ID, for example c('hsa', 'eco').
-##' @param n The number of CPUs or processors, and the default value is 4.
+##' @param specIDs A vector of KEGG species IDs, for example c('hsa', 'eco').
+##' @inheritParams getKEGGGeneSeq
 ##' @return The corresponding NCBI Taxonomy ID in character vector.
 ##' @examples
 ##' ## get human and Ecoli NCBI taxonomy ID with 2 threads
@@ -15,41 +15,89 @@
 ##' wNCBISpe <- transPhyloKEGG2NCBI(wKEGGSpe[, 2])
 ##' }
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
-##' @importFrom RCurl getURL
-##' @importFrom doMC registerDoMC
+##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
 ##' @export
 ##'
 ##' 
-transPhyloKEGG2NCBI <- function(KEGGID, n = 4){
+transPhyloKEGG2NCBI <- function(specIDs, n = 1){
 
-  registerDoMC(n)
+  ## register multiple core
+  registerDoParallel(cores = n)
 
-  getSingleTax <- function (KEGGspeID) {
+  getSingleTax <- function (specID) {
     ## USE: get KEGGSpeID webpage
-    ## INPUT: 'KEGGID' is the KEGG species ID.
+    ## INPUT: 'specID' is the KEGG species ID.
     ## OUTPUT: The NCBI taxonomy ID.
-    KEGGLink <- paste('http://www.genome.jp/kegg-bin/show_organism?org=', KEGGspeID, sep = '')
-    KEGGWeb <- getURL(KEGGLink)
 
-    ## get Taxonomy ID. The taxonomy ID is in the web-link like 'http://www.ncbi.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=593907'
-    taxIDLink <- gregexpr('wwwtax\\.cgi\\?mode=Info&id=\\d+', KEGGWeb)
-    taxIDLink <- getcontent(KEGGWeb, taxIDLink[[1]])
-    taxID <- gregexpr('\\d+', taxIDLink)
-    taxID <- getcontent(taxIDLink, taxID[[1]])
+    speInfoMat <- getKEGGSpeInfo(specID)
+    speInfo <- speInfoMat[speInfoMat[, 1] %in% 'Taxonomy', 2]
 
+    taxID <- gregexpr('\\d+', speInfo)
+    taxID <- getcontent(speInfo, taxID[[1]])
+    
     return(taxID)
   }
 
-  NCBITax <- foreach(i = 1:length(KEGGID), .combine = c) %dopar% {
-    print(paste0('It is running ', i, ' in a total number of ', length(KEGGID), '.'))
-    taxID <- getSingleTax(KEGGID[i])
-    names(taxID) <- KEGGID[i]
+  NCBITax <- foreach(i = 1:length(specIDs), .combine = c) %dopar% {
+    print(paste0('It is running ', i, ' in a total number of ', length(specIDs), '.'))
+    taxID <- getSingleTax(specIDs[i])
+    names(taxID) <- specIDs[i]
     return(taxID)
   }
+
+  ## stop multiple core
+  stopImplicitCluster()
 
   return(NCBITax)
 
+}
+
+
+##' KEGG Database Additional API - Get KEGG organism basic information.
+##'
+##' The KEGG organism basic information is retrieved from the webpage.
+##' @title Get KEGG organism basic information
+##' @inheritParams getKEGGPathAnno
+##' @return A two-column matrix contains basic information.
+##' @examples
+##' hasInfo <- getKEGGSpeInfo('hsa')
+##' @importFrom xml2 read_html xml_find_all xml_has_attr xml_children xml_text
+##' @importFrom stringr str_trim
+##' @author Yulong Niu \email{niuylscu@@gmail.com}
+##' @references \url{http://www.genome.jp/kegg-bin/show_organism?org=T01001}
+##' @export
+##'
+##' 
+getKEGGSpeInfo <- function(specID) {
+  
+  KEGGLink <- paste('http://www.genome.jp/kegg-bin/show_organism?org=', specID, sep = '')
+  KEGGWeb <- read_html(KEGGLink)
+
+  ## basic nodeset
+  basicNodeSet <- xml_find_all(KEGGWeb, './/tr')
+
+  ## has nowrap attr
+  hasAttrLogic <- sapply(basicNodeSet, function(x) {
+    eachHasAttr <- xml_has_attr(xml_children(x), 'valign')
+    eachHasLogic <- ifelse(sum(eachHasAttr) > 0, TRUE, FALSE)
+
+    return(eachHasLogic)
+  })
+  basicNodeSet <- basicNodeSet[hasAttrLogic]
+
+  ## get information for each node
+  nodeInfo <- lapply(basicNodeSet, function(x) {
+    eachInfo <- xml_text(xml_children(x))
+    return(eachInfo)
+  })
+  nodeInfo <- do.call(rbind, nodeInfo)
+
+  ## trim blank characters
+  nodeInfo <- apply(nodeInfo, 1:2, str_trim)
+
+  return(nodeInfo)
+  
 }
 
 
@@ -107,7 +155,7 @@ singleTIDSeq <- function(TID, seqType = 'aaseq') {
 ##' @examples
 ##' tNumMultiSeqs <- getKEGGTIDGeneSeq(c('T10017:100009', 'T10017:100036', 'T10017:100044'), n = 2)
 ##' @importFrom foreach foreach %dopar%
-##' @importFrom doMC registerDoMC
+##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.genome.jp/dbget-bin/www_bget?-f+-n+a+t10017:100009}
 ##' @references \url{http://www.genome.jp/dbget-bin/www_bget?-f+-n+n+t10017:100009}
@@ -115,15 +163,18 @@ singleTIDSeq <- function(TID, seqType = 'aaseq') {
 ##' @export
 ##'
 ##' 
-getKEGGTIDGeneSeq <- function(TIDs, seqType = 'aaseq', n = 4) {
+getKEGGTIDGeneSeq <- function(TIDs, seqType = 'aaseq', n = 1) {
 
-  ## register mutiple cores
-  registerDoMC(n)
+  ## register multiple core
+  registerDoParallel(cores = n)
   
   seqMulRes <- foreach(i = 1:length(TIDs), .combine = append) %dopar% {
     seqRes <- singleTIDSeq(TIDs[i], seqType = seqType)
     return(seqRes)
   }
+
+  ## stop multiple core
+  stopImplicitCluster()
 
   return(seqMulRes)
   

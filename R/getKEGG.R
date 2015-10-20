@@ -95,7 +95,7 @@ getKEGGKO <- function(KOID){
 ##'
 ##' Get the pathway ID and annoation of a given KEGG species ID.
 ##' @title List pathway of a given species ID
-##' @param KEGGspec The KEGG species ID. Only one species ID once input.
+##' @param specID KEGSS species org code or T number , for example "hsa" or "T01001".
 ##' @return A matrix of pathway ID and annotation.
 ##' @examples
 ##' hasPath <- getKEGGPathAnno('hsa')
@@ -104,10 +104,10 @@ getKEGGKO <- function(KOID){
 ##' @export
 ##' 
 ##'
-getKEGGPathAnno <- function(KEGGspec){
+getKEGGPathAnno <- function(specID){
 
   ## get KEGG pathway annotation list
-  url <- paste('http://rest.kegg.jp/list/pathway/', KEGGspec, sep = '')
+  url <- paste('http://rest.kegg.jp/list/pathway/', specID, sep = '')
   pathAnno <- webTable(url, ncol = 2)
 
   colnames(pathAnno) <- c('pathID', 'Annotation')
@@ -120,19 +120,18 @@ getKEGGPathAnno <- function(KEGGspec){
 ##'
 ##' Get the pathway and genes according to KEGG species ID.
 ##' @title List pathways and genes of a given KEGG species ID
-##' @param KEGGspec The KEGG species ID. Only one species ID once input.
+##' @inheritParams getKEGGPathAnno
 ##' @return A List named with KEGG pathway IDs, and each element of the list contains the KEGG gene IDs.
 ##' @examples
-##' \dontrun{
-##' hasPathGenes <- getKEGGPathGenes('hsa')}
+##' hasPathGenes <- getKEGGPathGenes('hsa')
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
 ##'
-getKEGGPathGenes <- function(KEGGspec){
+getKEGGPathGenes <- function(specID){
 
   ## get KEGG pathway list
-  url <- paste('http://rest.kegg.jp/link/', KEGGspec, '/pathway',  sep = '')
+  url <- paste('http://rest.kegg.jp/link/', specID, '/pathway',  sep = '')
 
   pathAnno <- webTable(url, ncol = 2)
 
@@ -152,14 +151,15 @@ getKEGGPathGenes <- function(KEGGspec){
 ##'
 ##' Get the KEGG protein ID list and annotation.
 ##' @title Get whole KEGG IDs and annotation
-##' @param KEGGspec KEGSS species org code or T number , for example "hsa" or "T01001".
+##' @inheritParams getKEGGPathAnno
 ##' @return A matrix of KEGG IDs and annotation
 ##' @examples
 ##' ## KEGG org cord
 ##' getProID('eco')
 ##'
+##' \dontrun{
 ##' ## KEGG T number
-##' getProID('T00007')
+##' getProID('T00007')}
 ##'
 ##' ## KEGG T number with empty elements
 ##' getProID('T10004')
@@ -168,10 +168,10 @@ getKEGGPathGenes <- function(KEGGspec){
 ##' @export
 ##'
 ##' 
-getProID <- function(KEGGspec){
+getProID <- function(specID){
   
   ## get KEGG ID annotation list
-  url <- paste('http://rest.kegg.jp/list/', KEGGspec, sep = '')
+  url <- paste('http://rest.kegg.jp/list/', specID, sep = '')
 
   ## transfer webpage into a matrix
   speIDAnno <- webTable(url, ncol = 2)
@@ -210,7 +210,7 @@ getProID <- function(KEGGspec){
 ##' ecoProIDs <- getProID('eco')
 ##' ecoGenomePro <- getKEGGGeneSeq(ecoProIDs[, 1])}
 ##' @importFrom RCurl getURL
-##' @importFrom doMC registerDoMC
+##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom Biostrings BStringSet
 ##' @importFrom ParaMisc CutSeqEqu
@@ -220,10 +220,10 @@ getProID <- function(KEGGspec){
 ##' @export
 ##'
 ##' 
-getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 4){
+getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 1){
 
-  ## register mutiple cores
-  registerDoMC(n)
+  ## register multiple core
+  registerDoParallel(cores = n)
 
   doTen <- function(tenWebSeq, seqTypeBio = seqType){
     ## USE: a temprary function to deal with the return web "10 seqence", and it also for less ten or without coding sequence. The basic idea to split sequences is by the marker of '(A)' for amino acid sequences and '(N)' for nucleotide sequences.
@@ -277,6 +277,9 @@ getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 4){
     doTen(webProSeq)
   }
 
+  ## stop multiple core
+  stopImplicitCluster()
+  
   return(proSeq)
 
 }
@@ -337,18 +340,19 @@ getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 4){
 ##' convKEGG('genes', 'ncbi-geneid:3113320', convertType = 'identity', n = 2)
 ##' convKEGG('genes', 'ncbi-gi:54293358', convertType = 'identity', n = 2)
 ##' @importFrom foreach foreach %dopar%
-##' @importFrom doMC registerDoMC
+##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom ParaMisc CutSeqEqu
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/keggapi.html}
 ##' @export
 ##'
 ##' 
-convKEGG <- function(targetDB, sourceEntry, convertType = 'database', n = 4) {
+convKEGG <- function(targetDB, sourceEntry, convertType = 'database', n = 1) {
 
   if (convertType == 'identity') {
     
-    registerDoMC(n)
+    ## register multiple core
+    registerDoParallel(cores = n)
     
     ## cut the every 10 sourceEntry
     cutMat <- CutSeqEqu(length(sourceEntry), 10)
@@ -374,6 +378,9 @@ convKEGG <- function(targetDB, sourceEntry, convertType = 'database', n = 4) {
     if (is.null(convRes)) {
       convRes <- matrix(rep(NA, 2), nrow = 1)
     } else {}
+
+    ## stop multiple core
+    stopImplicitCluster()
     
   } else {
     url <- paste0('http://rest.kegg.jp/conv/', targetDB, '/', sourceEntry)
