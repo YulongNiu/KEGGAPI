@@ -4,10 +4,10 @@
 \alias{getProID}
 \title{Get whole KEGG IDs and annotation}
 \usage{
-getProID(KEGGspec)
+getProID(specID)
 }
 \arguments{
-\item{KEGGspec}{KEGSS species org code or T number , for example "hsa" or "T01001".}
+\item{specID}{KEGSS species org code or T number , for example "hsa" or "T01001".}
 }
 \value{
 A matrix of KEGG IDs and annotation
@@ -22,8 +22,9 @@ Get the KEGG protein ID list and annotation.
 ## KEGG org cord
 getProID('eco')
 
+\dontrun{
 ## KEGG T number
-getProID('T00007')
+getProID('T00007')}
 
 ## KEGG T number with empty elements
 getProID('T10004')

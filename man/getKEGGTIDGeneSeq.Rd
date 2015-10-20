@@ -4,7 +4,7 @@
 \alias{getKEGGTIDGeneSeq}
 \title{KEGG Database Additional API - Get mutiple nucleotide acid and amino acid sequences according to the T numbers}
 \usage{
-getKEGGTIDGeneSeq(TIDs, seqType = "aaseq", n = 4)
+getKEGGTIDGeneSeq(TIDs, seqType = "aaseq", n = 1)
 }
 \arguments{
 \item{TIDs}{A vector of T number IDs. for the protein or gene.}

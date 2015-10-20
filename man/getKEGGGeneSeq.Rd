@@ -4,7 +4,7 @@
 \alias{getKEGGGeneSeq}
 \title{Get protein and gene sequences}
 \usage{
-getKEGGGeneSeq(KEGGID, seqType = "aaseq", n = 4)
+getKEGGGeneSeq(KEGGID, seqType = "aaseq", n = 1)
 }
 \arguments{
 \item{KEGGID}{A vector of KEGG IDs. Seqences from different species could be combined together.}

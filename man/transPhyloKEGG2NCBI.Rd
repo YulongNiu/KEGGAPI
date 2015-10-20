@@ -4,10 +4,10 @@
 \alias{transPhyloKEGG2NCBI}
 \title{Get NCBI Taxonomy ID From KEGG ID}
 \usage{
-transPhyloKEGG2NCBI(KEGGID, n = 4)
+transPhyloKEGG2NCBI(specIDs, n = 1)
 }
 \arguments{
-\item{KEGGID}{The KEGG support multiple species ID, for example c('hsa', 'eco').}
+\item{specIDs}{A vector of KEGG species IDs, for example c('hsa', 'eco').}
 
 \item{n}{The number of CPUs or processors, and the default value is 4.}
 }

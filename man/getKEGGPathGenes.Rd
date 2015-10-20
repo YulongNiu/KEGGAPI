@@ -4,10 +4,10 @@
 \alias{getKEGGPathGenes}
 \title{List pathways and genes of a given KEGG species ID}
 \usage{
-getKEGGPathGenes(KEGGspec)
+getKEGGPathGenes(specID)
 }
 \arguments{
-\item{KEGGspec}{The KEGG species ID. Only one species ID once input.}
+\item{specID}{KEGSS species org code or T number , for example "hsa" or "T01001".}
 }
 \value{
 A List named with KEGG pathway IDs, and each element of the list contains the KEGG gene IDs.
@@ -19,8 +19,7 @@ KEGG Database API - Get the pathway and genes.
 Get the pathway and genes according to KEGG species ID.
 }
 \examples{
-\dontrun{
-hasPathGenes <- getKEGGPathGenes('hsa')}
+hasPathGenes <- getKEGGPathGenes('hsa')
 }
 \author{
 Yulong Niu \email{niuylscu@gmail.com}

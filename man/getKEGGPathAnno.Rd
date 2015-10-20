@@ -4,10 +4,10 @@
 \alias{getKEGGPathAnno}
 \title{List pathway of a given species ID}
 \usage{
-getKEGGPathAnno(KEGGspec)
+getKEGGPathAnno(specID)
 }
 \arguments{
-\item{KEGGspec}{The KEGG species ID. Only one species ID once input.}
+\item{specID}{KEGSS species org code or T number , for example "hsa" or "T01001".}
 }
 \value{
 A matrix of pathway ID and annotation.

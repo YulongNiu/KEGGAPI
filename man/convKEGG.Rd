@@ -4,7 +4,7 @@
 \alias{convKEGG}
 \title{KEGG convert function}
 \usage{
-convKEGG(targetDB, sourceEntry, convertType = "database", n = 4)
+convKEGG(targetDB, sourceEntry, convertType = "database", n = 1)
 }
 \arguments{
 \item{targetDB}{"targetDB" and "convertType" are set correspondingly.
