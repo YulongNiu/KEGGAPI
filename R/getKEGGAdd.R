@@ -31,7 +31,7 @@ transPhyloKEGG2NCBI <- function(specIDs, n = 1){
     ## OUTPUT: The NCBI taxonomy ID.
 
     speInfoMat <- getKEGGSpeInfo(specID)
-    speInfo <- speInfoMat[speInfoMat[, 1] %in% 'Taxonomy', 2]
+    speInfo <- speInfoMat$Taxonomy
 
     taxID <- gregexpr('\\d+', speInfo)
     taxID <- getcontent(speInfo, taxID[[1]])
@@ -56,14 +56,16 @@ transPhyloKEGG2NCBI <- function(specIDs, n = 1){
 
 ##' KEGG Database Additional API - Get KEGG organism basic information.
 ##'
-##' The KEGG organism basic information is retrieved from the webpage.
+##' The KEGG organism basic information is retrieved from the webpage. If references are included, a four-row matrix ("Reference", "Authors", "Title", "Journal") will be returned. If chromosome are included, a three-row matrix ("Chromosome", "Sequence", and "Length") will be returned. The similar process will be applied to plasmid.
 ##' @title Get KEGG organism basic information
 ##' @inheritParams getKEGGPathAnno
-##' @return A two-column matrix contains basic information.
+##' @return A list contains basic information.
 ##' @examples
 ##' hasInfo <- getKEGGSpeInfo('hsa')
+##' draInfo <- getKEGGSpeInfo('dra')
 ##' @importFrom xml2 read_html xml_find_all xml_has_attr xml_children xml_text
 ##' @importFrom stringr str_trim
+##' @importFrom foreach foreach %do%
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.genome.jp/kegg-bin/show_organism?org=T01001}
 ##' @export
@@ -74,6 +76,7 @@ getKEGGSpeInfo <- function(specID) {
   KEGGLink <- paste('http://www.genome.jp/kegg-bin/show_organism?org=', specID, sep = '')
   KEGGWeb <- read_html(KEGGLink)
 
+  ##~~~~~~~~~~~~~~~~~~~~~ get info list~~~~~~~~~~~~~~~~~~~~~~~~
   ## basic nodeset
   basicNodeSet <- xml_find_all(KEGGWeb, './/tr')
 
@@ -89,13 +92,82 @@ getKEGGSpeInfo <- function(specID) {
   ## get information for each node
   nodeInfo <- lapply(basicNodeSet, function(x) {
     eachInfo <- xml_text(xml_children(x))
+    ## trim blank characters
+    eachInfo <- str_trim(eachInfo)
     return(eachInfo)
   })
-  nodeInfo <- do.call(rbind, nodeInfo)
 
-  ## trim blank characters
-  nodeInfo <- apply(nodeInfo, 1:2, str_trim)
+  ## use first element as the list name
+  nodeNames <- sapply(nodeInfo, '[[', 1)
+  nodeInfo <- lapply(nodeInfo, '[[', 2)
+  names(nodeInfo) <- nodeNames
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with references~~~~~~~~~~~
+  referIdx <- which(nodeNames == 'Reference')
+  
+  if (length(referIdx) > 0) {
+    
+    ## referMat
+    referMat <- foreach (i = 0:3, .combine = rbind) %do% {
+      referInfo <- sapply(nodeInfo[referIdx + i], '[[', 1)
+      return(referInfo)
+    }
+    rownames(referMat) <- c("Reference", "Authors", "Title", "Journal")
+    colnames(referMat) <- NULL
+    allReferIdx <- c(referIdx, referIdx + 1, referIdx + 2, referIdx + 3)
+  } else {
+    referMat <- NULL
+  }
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with chromosome~~~~~~~~~~~
+  chroIdx <- which(nodeNames == 'Chromosome')
+  
+  if (length(chroIdx) > 0) {
+    
+    ## chroMat
+    chroMat <- foreach (i = 0:2, .combine = rbind) %do% {
+      chroInfo <- sapply(nodeInfo[chroIdx + i], '[[', 1)
+      return(chroInfo)
+    }
+    rownames(chroMat) <- c("Chromosome", "Sequence", "Length")
+    colnames(chroMat) <- NULL
+    allChroIdx <- c(chroIdx, chroIdx + 1, chroIdx + 2)
+  } else {
+    chroMat <- NULL
+    allChroIdx <- 0
+  }
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with plasmid~~~~~~~~~~~
+  plasIdx <- which(nodeNames == 'Plasmid')
+  
+  if (length(plasIdx) > 0) {
+    
+    ## plasMat
+    plasMat <- foreach (i = 0:2, .combine = rbind) %do% {
+      plasInfo <- sapply(nodeInfo[plasIdx + i], '[[', 1)
+      return(plasInfo)
+    }
+    rownames(plasMat) <- c("Plasmid", "Sequence", "Length")
+    colnames(plasMat) <- NULL
+    allPlasIdx <- c(plasIdx, plasIdx + 1, plasIdx + 2)
+  } else {
+    plasMat <- NULL
+    allPlasIdx <- 0
+  }
+  ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  allIdx <- 1:length(nodeInfo)
+  remainIdx <- allIdx[!(allIdx %in% c(allReferIdx, allChroIdx, allPlasIdx))]
+
+  nodeInfo <- nodeInfo[remainIdx]
+
+  nodeInfo$References = referMat
+  nodeInfo$Chromosomes = chroMat
+  nodeInfo$Plasmids = plasMat
+  
   return(nodeInfo)
   
 }
