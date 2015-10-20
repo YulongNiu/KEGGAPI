@@ -10,16 +10,17 @@ getKEGGSpeInfo(specID)
 \item{specID}{KEGSS species org code or T number , for example "hsa" or "T01001".}
 }
 \value{
-A two-column matrix contains basic information.
+A list contains basic information.
 }
 \description{
 KEGG Database Additional API - Get KEGG organism basic information.
 }
 \details{
-The KEGG organism basic information is retrieved from the webpage.
+The KEGG organism basic information is retrieved from the webpage. If references are included, a four-row matrix ("Reference", "Authors", "Title", "Journal") will be returned. If chromosome are included, a three-row matrix ("Chromosome", "Sequence", and "Length") will be returned. The similar process will be applied to plasmid.
 }
 \examples{
 hasInfo <- getKEGGSpeInfo('hsa')
+draInfo <- getKEGGSpeInfo('dra')
 }
 \author{
 Yulong Niu \email{niuylscu@gmail.com}
