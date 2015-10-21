@@ -118,6 +118,7 @@ getKEGGSpeInfo <- function(specID) {
     allReferIdx <- c(referIdx, referIdx + 1, referIdx + 2, referIdx + 3)
   } else {
     referMat <- NULL
+    allReferIdx <- 0
   }
   ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
