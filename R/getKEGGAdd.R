@@ -109,12 +109,12 @@ getKEGGSpeInfo <- function(specID) {
   if (length(referIdx) > 0) {
     
     ## referMat
-    referMat <- foreach (i = 0:3, .combine = rbind) %do% {
+    referMat <- foreach (i = 0:3, .combine = cbind) %do% {
       referInfo <- sapply(nodeInfo[referIdx + i], '[[', 1)
       return(referInfo)
     }
-    rownames(referMat) <- c("Reference", "Authors", "Title", "Journal")
-    colnames(referMat) <- NULL
+    colnames(referMat) <- c("Reference", "Authors", "Title", "Journal")
+    rownames(referMat) <- NULL
     allReferIdx <- c(referIdx, referIdx + 1, referIdx + 2, referIdx + 3)
   } else {
     referMat <- NULL
@@ -128,12 +128,12 @@ getKEGGSpeInfo <- function(specID) {
   if (length(chroIdx) > 0) {
     
     ## chroMat
-    chroMat <- foreach (i = 0:2, .combine = rbind) %do% {
+    chroMat <- foreach (i = 0:2, .combine = cbind) %do% {
       chroInfo <- sapply(nodeInfo[chroIdx + i], '[[', 1)
       return(chroInfo)
     }
-    rownames(chroMat) <- c("Chromosome", "Sequence", "Length")
-    colnames(chroMat) <- NULL
+    colnames(chroMat) <- c("Chromosome", "Sequence", "Length")
+    rownames(chroMat) <- NULL
     allChroIdx <- c(chroIdx, chroIdx + 1, chroIdx + 2)
   } else {
     chroMat <- NULL
@@ -147,12 +147,12 @@ getKEGGSpeInfo <- function(specID) {
   if (length(plasIdx) > 0) {
     
     ## plasMat
-    plasMat <- foreach (i = 0:2, .combine = rbind) %do% {
+    plasMat <- foreach (i = 0:2, .combine = cbind) %do% {
       plasInfo <- sapply(nodeInfo[plasIdx + i], '[[', 1)
       return(plasInfo)
     }
-    rownames(plasMat) <- c("Plasmid", "Sequence", "Length")
-    colnames(plasMat) <- NULL
+    colnames(plasMat) <- c("Plasmid", "Sequence", "Length")
+    rownames(plasMat) <- NULL
     allPlasIdx <- c(plasIdx, plasIdx + 1, plasIdx + 2)
   } else {
     plasMat <- NULL
