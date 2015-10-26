@@ -166,39 +166,35 @@ getKEGGSpeInfo <- function(specID) {
 ##' @param TID The T number ID for the protein or gene.
 ##' @param seqType  Choose nucleotide acid ('ntseq') or amino acid ('aaseq') seqences, and the default is amino acid sequences.
 ##' @return A BStringSet
-##' @importFrom RCurl getURL
+##' @importFrom xml2 read_html xml_text xml_find_all
+##' @importFrom stringr str_extract
 ##' @importFrom Biostrings BStringSet
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @keywords internal
 ##'
 ##' 
 singleTIDSeq <- function(TID, seqType = 'aaseq') {
-  
+
+  ## read in xml
   if (seqType == 'aaseq') {
     KEGGLink <- paste0('http://www.genome.jp/dbget-bin/www_bget?-f+-n+', 'a+', TID)
   }
   else if (seqType == 'ntseq') {
     KEGGLink <- paste0('http://www.genome.jp/dbget-bin/www_bget?-f+-n+', 'n+', TID)
   }
-  KEGGWeb <- getURL(KEGGLink)
+  seqXml <- read_html(KEGGLink)
 
-  splitPage <- unlist(strsplit(KEGGWeb, split = '\n', fixed = TRUE))
+  ## get sequence, split by '\n' and remove ''
+  seqStr <- xml_text(xml_find_all(seqXml, './/pre'))
+  seqStr <- unlist(strsplit(seqStr, split = '\n', fixed = TRUE))
+  seqStr <- seqStr[nchar(seqStr) > 0]
 
-  ## get sequence name
-  ## `nameInd` is also the start number (logic)
-  nameInd <- grepl(TID, splitPage, fixed = TRUE)
-  seqName <- splitPage[nameInd]
-  seqNameStart <- gregexpr(TID, seqName)
-  seqNameStart[[1]]
-  seqName <- substring(seqName, seqNameStart)
-
-  ## get sequence
-  seqStart <- which(nameInd) + 1
-  seqEnd <- which(grepl('</pre></div>', splitPage, fixed = TRUE)) - 1
-  seq <- paste(splitPage[seqStart:seqEnd], collapse = '')
-  seqBS <- BStringSet(seq)
+  ## the first one must be sequence name
+  seqName <- str_extract(seqStr[1], paste0(TID, '.*'))
+  seqBS <- paste(seqStr[-1], collapse = '')
+  seqBS <- BStringSet(seqBS)
   names(seqBS) <- seqName
-
+  
   return(seqBS)
 }
 
@@ -211,7 +207,7 @@ singleTIDSeq <- function(TID, seqType = 'aaseq') {
 ##' @inheritParams getKEGGGeneSeq
 ##' @return A BStringSet
 ##' @examples
-##' tNumMultiSeqs <- getKEGGTIDGeneSeq(c('T10017:100009', 'T10017:100036', 'T10017:100044'), n = 2)
+##' multiSeqs <- getKEGGTIDGeneSeq(c('T10017:100009', 'T10017:100036', 'T10017:100044'), n = 2)
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
