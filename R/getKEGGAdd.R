@@ -61,7 +61,7 @@ transPhyloKEGG2NCBI <- function(specIDs, n = 1){
 ##' @examples
 ##' hasInfo <- getKEGGSpeInfo('hsa')
 ##' draInfo <- getKEGGSpeInfo('dra')
-##' @importFrom xml2 read_html xml_find_all xml_has_attr xml_children xml_text
+##' @importFrom xml2 read_html xml_find_all xml_children xml_text
 ##' @importFrom stringr str_trim
 ##' @importFrom foreach foreach %do%
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
@@ -75,17 +75,9 @@ getKEGGSpeInfo <- function(specID) {
   KEGGWeb <- read_html(KEGGLink)
 
   ##~~~~~~~~~~~~~~~~~~~~~ get info list~~~~~~~~~~~~~~~~~~~~~~~~
-  ## basic nodeset
-  basicNodeSet <- xml_find_all(KEGGWeb, './/tr')
-
-  ## has nowrap attr
-  hasAttrLogic <- sapply(basicNodeSet, function(x) {
-    eachHasAttr <- xml_has_attr(xml_children(x), 'valign')
-    eachHasLogic <- ifelse(sum(eachHasAttr) > 0, TRUE, FALSE)
-
-    return(eachHasLogic)
-  })
-  basicNodeSet <- basicNodeSet[hasAttrLogic]
+  ## <tr><td valign="top">...</tr>
+  infoPath <- './/tr[td/@valign="top"]'
+  basicNodeSet <- xml_find_all(KEGGWeb, infoPath)
 
   ## get information for each node
   nodeInfo <- lapply(basicNodeSet, function(x) {
@@ -104,8 +96,7 @@ getKEGGSpeInfo <- function(specID) {
   ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with references~~~~~~~~~~~
   referIdx <- which(nodeNames == 'Reference')
   
-  if (length(referIdx) > 0) {
-    
+  if (length(referIdx) > 0) {    
     ## referMat
     referMat <- foreach (i = 0:3, .combine = cbind) %do% {
       referInfo <- sapply(nodeInfo[referIdx + i], '[[', 1)
@@ -122,9 +113,7 @@ getKEGGSpeInfo <- function(specID) {
 
   ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with chromosome~~~~~~~~~~~
   chroIdx <- which(nodeNames == 'Chromosome')
-  
   if (length(chroIdx) > 0) {
-    
     ## chroMat
     chroMat <- foreach (i = 0:2, .combine = cbind) %do% {
       chroInfo <- sapply(nodeInfo[chroIdx + i], '[[', 1)
@@ -141,9 +130,7 @@ getKEGGSpeInfo <- function(specID) {
 
   ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with plasmid~~~~~~~~~~~
   plasIdx <- which(nodeNames == 'Plasmid')
-  
   if (length(plasIdx) > 0) {
-    
     ## plasMat
     plasMat <- foreach (i = 0:2, .combine = cbind) %do% {
       plasInfo <- sapply(nodeInfo[plasIdx + i], '[[', 1)
