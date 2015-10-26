@@ -17,6 +17,7 @@
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
+##' @importFrom stringr str_extract
 ##' @export
 ##'
 ##' 
@@ -31,10 +32,7 @@ transPhyloKEGG2NCBI <- function(specIDs, n = 1){
     ## OUTPUT: The NCBI taxonomy ID.
 
     speInfoMat <- getKEGGSpeInfo(specID)
-    speInfo <- speInfoMat$Taxonomy
-
-    taxID <- gregexpr('\\d+', speInfo)
-    taxID <- getcontent(speInfo, taxID[[1]])
+    taxID <- str_extract(speInfoMat$Taxonomy, '\\d+')
     
     return(taxID)
   }
@@ -63,7 +61,7 @@ transPhyloKEGG2NCBI <- function(specIDs, n = 1){
 ##' @examples
 ##' hasInfo <- getKEGGSpeInfo('hsa')
 ##' draInfo <- getKEGGSpeInfo('dra')
-##' @importFrom xml2 read_html xml_find_all xml_has_attr xml_children xml_text
+##' @importFrom xml2 read_html xml_find_all xml_children xml_text
 ##' @importFrom stringr str_trim
 ##' @importFrom foreach foreach %do%
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
@@ -77,17 +75,9 @@ getKEGGSpeInfo <- function(specID) {
   KEGGWeb <- read_html(KEGGLink)
 
   ##~~~~~~~~~~~~~~~~~~~~~ get info list~~~~~~~~~~~~~~~~~~~~~~~~
-  ## basic nodeset
-  basicNodeSet <- xml_find_all(KEGGWeb, './/tr')
-
-  ## has nowrap attr
-  hasAttrLogic <- sapply(basicNodeSet, function(x) {
-    eachHasAttr <- xml_has_attr(xml_children(x), 'valign')
-    eachHasLogic <- ifelse(sum(eachHasAttr) > 0, TRUE, FALSE)
-
-    return(eachHasLogic)
-  })
-  basicNodeSet <- basicNodeSet[hasAttrLogic]
+  ## <tr><td valign="top">...</tr>
+  infoPath <- './/tr[td/@valign="top"]'
+  basicNodeSet <- xml_find_all(KEGGWeb, infoPath)
 
   ## get information for each node
   nodeInfo <- lapply(basicNodeSet, function(x) {
@@ -106,8 +96,7 @@ getKEGGSpeInfo <- function(specID) {
   ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with references~~~~~~~~~~~
   referIdx <- which(nodeNames == 'Reference')
   
-  if (length(referIdx) > 0) {
-    
+  if (length(referIdx) > 0) {    
     ## referMat
     referMat <- foreach (i = 0:3, .combine = cbind) %do% {
       referInfo <- sapply(nodeInfo[referIdx + i], '[[', 1)
@@ -124,9 +113,7 @@ getKEGGSpeInfo <- function(specID) {
 
   ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with chromosome~~~~~~~~~~~
   chroIdx <- which(nodeNames == 'Chromosome')
-  
   if (length(chroIdx) > 0) {
-    
     ## chroMat
     chroMat <- foreach (i = 0:2, .combine = cbind) %do% {
       chroInfo <- sapply(nodeInfo[chroIdx + i], '[[', 1)
@@ -143,9 +130,7 @@ getKEGGSpeInfo <- function(specID) {
 
   ##~~~~~~~~~~~~~~~~~~~~~~~~~deal with plasmid~~~~~~~~~~~
   plasIdx <- which(nodeNames == 'Plasmid')
-  
   if (length(plasIdx) > 0) {
-    
     ## plasMat
     plasMat <- foreach (i = 0:2, .combine = cbind) %do% {
       plasInfo <- sapply(nodeInfo[plasIdx + i], '[[', 1)
@@ -181,39 +166,35 @@ getKEGGSpeInfo <- function(specID) {
 ##' @param TID The T number ID for the protein or gene.
 ##' @param seqType  Choose nucleotide acid ('ntseq') or amino acid ('aaseq') seqences, and the default is amino acid sequences.
 ##' @return A BStringSet
-##' @importFrom RCurl getURL
+##' @importFrom xml2 read_html xml_text xml_find_all
+##' @importFrom stringr str_extract
 ##' @importFrom Biostrings BStringSet
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @keywords internal
 ##'
 ##' 
 singleTIDSeq <- function(TID, seqType = 'aaseq') {
-  
+
+  ## read in xml
   if (seqType == 'aaseq') {
     KEGGLink <- paste0('http://www.genome.jp/dbget-bin/www_bget?-f+-n+', 'a+', TID)
   }
   else if (seqType == 'ntseq') {
     KEGGLink <- paste0('http://www.genome.jp/dbget-bin/www_bget?-f+-n+', 'n+', TID)
   }
-  KEGGWeb <- getURL(KEGGLink)
+  seqXml <- read_html(KEGGLink)
 
-  splitPage <- unlist(strsplit(KEGGWeb, split = '\n', fixed = TRUE))
+  ## get sequence, split by '\n' and remove ''
+  seqStr <- xml_text(xml_find_all(seqXml, './/pre'))
+  seqStr <- unlist(strsplit(seqStr, split = '\n', fixed = TRUE))
+  seqStr <- seqStr[nchar(seqStr) > 0]
 
-  ## get sequence name
-  ## `nameInd` is also the start number (logic)
-  nameInd <- grepl(TID, splitPage, fixed = TRUE)
-  seqName <- splitPage[nameInd]
-  seqNameStart <- gregexpr(TID, seqName)
-  seqNameStart[[1]]
-  seqName <- substring(seqName, seqNameStart)
-
-  ## get sequence
-  seqStart <- which(nameInd) + 1
-  seqEnd <- which(grepl('</pre></div>', splitPage, fixed = TRUE)) - 1
-  seq <- paste(splitPage[seqStart:seqEnd], collapse = '')
-  seqBS <- BStringSet(seq)
+  ## the first one must be sequence name
+  seqName <- str_extract(seqStr[1], paste0(TID, '.*'))
+  seqBS <- paste(seqStr[-1], collapse = '')
+  seqBS <- BStringSet(seqBS)
   names(seqBS) <- seqName
-
+  
   return(seqBS)
 }
 
@@ -226,7 +207,7 @@ singleTIDSeq <- function(TID, seqType = 'aaseq') {
 ##' @inheritParams getKEGGGeneSeq
 ##' @return A BStringSet
 ##' @examples
-##' tNumMultiSeqs <- getKEGGTIDGeneSeq(c('T10017:100009', 'T10017:100036', 'T10017:100044'), n = 2)
+##' multiSeqs <- getKEGGTIDGeneSeq(c('T10017:100009', 'T10017:100036', 'T10017:100044'), n = 2)
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
@@ -316,48 +297,26 @@ getKEGGGeneMotif <- function(geneID, hasAddInfo = FALSE) {
 ##' @param motifName A single KEGG motif ID
 ##' @rdname KEGGMotifList
 ##' @return A matrix of KEGG genes and description
-##' @examples
-##' \dontrun{
-##' getKEGGMotifList('pf:DUF3675')}
+##' @examples modifMat <- getKEGGMotifList('pf:DUF3675')
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
-##' @importFrom RCurl getURL
+##' @importFrom xml2 read_html xml_find_all xml_text
+##' @importFrom stringr str_trim
 ##' @export
 ##' 
 getKEGGMotifList <- function(motifName) {
 
   ## motif list url
-  url <- paste0('www.genome.jp/dbget-bin/get_linkdb?-t+genes+', motifName)
+  url <- paste0('http://www.genome.jp/dbget-bin/get_linkdb?-t+genes+', motifName)
+  motifXml <- read_html(url)
 
-  ## process webpage
-  webPage <- getURL(url)
-
-  ## get the webpage contains gene information
-  getGeneReg <- gregexpr('<a href=\"/dbget-bin/www_bget?.*$', webPage)
-  webPage <- getcontent(webPage, getGeneReg[[1]])
-
-  ## split webPage
-  motifList <- unlist(strsplit(webPage, split = '\n', fixed = TRUE))
-  motifList <- motifList[1:(length(motifList) - 3)]
-
-  ## get gene names and description
-  motifList <- lapply(motifList, function(x) {
-    geneReg <- gregexpr('>.*</a>', x)
-    geneVal <- getcontent(x, geneReg[[1]])
-    geneValNchar <- nchar(geneVal)
-    geneVal <- substr(geneVal, start = 2, stop = geneValNchar - 4)
-
-    desReg <- gregexpr('</a>.*$', x)
-    desVal <- getcontent(x, desReg[[1]])
-    desValNchar <- nchar(desVal)
-    desVal <- substring(desVal, 5)
-    ## remove space
-    desBlankReg <- gregexpr('[^ ].*[^ ]', desVal)
-    desVal <- getcontent(desVal, desBlankReg[[1]])
-
-    return(c(geneVal, desVal))
-  })
-
-  motifMat <- do.call(rbind, motifList)
+  ## <pre>..Definition..</pre>
+  ## remove head and tail blanks
+  motifPath <- './/pre[contains(text(), "Definition")]/node()'
+  motifVec <- xml_text(xml_find_all(motifXml, motifPath))
+  motifVec <- str_trim(motifVec)
+  
+  ## first element is the table title
+  motifMat <- matrix(motifVec[-1], ncol = 2, byrow = 2)
   colnames(motifMat) <- c('GeneName', 'Description')
   
   return(motifMat)

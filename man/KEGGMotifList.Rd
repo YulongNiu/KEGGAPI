@@ -24,8 +24,7 @@ KEGG Database Additional API - Get genes processing certain motif
 Get all the gene having certain motif.
 }
 \examples{
-\dontrun{
-getKEGGMotifList('pf:DUF3675')}
+modifMat <- getKEGGMotifList('pf:DUF3675')
 pfUniprot <- getKEGGMotifList2('pf:DUF3675')
 \dontrun{
 # convert uniprot ID to KEGG IDs
