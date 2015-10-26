@@ -17,6 +17,7 @@
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
+##' @importFrom stringr str_extract
 ##' @export
 ##'
 ##' 
@@ -31,10 +32,7 @@ transPhyloKEGG2NCBI <- function(specIDs, n = 1){
     ## OUTPUT: The NCBI taxonomy ID.
 
     speInfoMat <- getKEGGSpeInfo(specID)
-    speInfo <- speInfoMat$Taxonomy
-
-    taxID <- gregexpr('\\d+', speInfo)
-    taxID <- getcontent(speInfo, taxID[[1]])
+    taxID <- str_extract(speInfoMat$Taxonomy, '\\d+')
     
     return(taxID)
   }
