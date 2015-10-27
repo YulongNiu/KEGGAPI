@@ -185,7 +185,7 @@ getProID <- function(specID){
 ##'
 ##' Get the protein and gene sequences in fasta format. This function support mutiple querys.
 ##' @title Get protein and gene sequences
-##' @param KEGGID A vector of KEGG IDs. Seqences from different species could be combined together.
+##' @param KEGGGeneIDs A vector of KEGG IDs. Seqences from different species could be combined together.
 ##' @param seqType Choose nucleotide acid (ntseq) or amino acid (aaseq) seqences, and the default is amino acid sequences.
 ##' @param n The number of CPUs or processors, and the default value is 4.
 ##' @return A BStringSet 
@@ -220,7 +220,7 @@ getProID <- function(specID){
 ##' @export
 ##'
 ##' 
-getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 1){
+getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', n = 1){
 
   ## register multiple core
   registerDoParallel(cores = n)
@@ -258,18 +258,18 @@ getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 1){
     return(tenSeqBS)
   }
 
-  ## cut the input 'KEGGID' into 10
-  cutMat <- CutSeqEqu(length(KEGGID), 10)
+  ## cut the input 'KEGGGeneIDs' into 10
+  cutMat <- CutSeqEqu(length(KEGGGeneIDs), 10)
 
   ## deal with ten sequences each time
-  print(paste('The input ID length is ', length(KEGGID), '.', sep = ''))
+  print(paste0('Input ', length(KEGGGeneIDs), ' gene IDs.'))
   proSeq <- foreach(i = cutMat[1, ], j = cutMat[2, ], .combine = append) %dopar% {
-    print(paste('Get ', j , ' proteins.'))
+    print(paste0('It is getting ', j , ' seqeunces in a total of ', length(KEGGGeneIDs), '.'))
     if (i == j){
       ## only one input KEGG ID
-      linkKEGGPro <- paste('http://rest.kegg.jp/get/', KEGGID[i], '/', seqType, sep = '')
+      linkKEGGPro <- paste('http://rest.kegg.jp/get/', KEGGGeneIDs[i], '/', seqType, sep = '')
     } else {
-      mergeID <- paste(KEGGID[i:j], collapse = "+")
+      mergeID <- paste(KEGGGeneIDs[i:j], collapse = "+")
       linkKEGGPro <- paste('http://rest.kegg.jp/get/', mergeID, '/', seqType, sep = '')
     }
     webProSeq <- getURL(linkKEGGPro)
@@ -283,6 +283,13 @@ getKEGGGeneSeq <- function(KEGGID, seqType = 'aaseq', n = 1){
   return(proSeq)
 
 }
+
+
+getKEGGGeneInfo <- function(KEGGGeneIDs, n = 1)
+
+
+
+
 
 
 
