@@ -1,4 +1,4 @@
-##' KEGG Database API - Get species KEGG/NCBI ID.
+##' KEGG Database API - Get species KEGG/NCBI ID
 ##'
 ##' Get the phylogenetic information of given species.
 ##' It supports both batch input and regular expression search.
@@ -63,7 +63,7 @@ getKEGGPhylo <- function(speList, speType = 'KEGG', whole = FALSE){
 }
 
 
-##' KEGG Database API - Get the KEGG orthology list.
+##' KEGG Database API - Get the KEGG orthology list
 ##'
 ##' Get the KEGG orthology list by a given KEGG KO ID.
 ##' @title Get KEGG orthology.
@@ -91,7 +91,7 @@ getKEGGKO <- function(KOID){
 }
 
 
-##' KEGG Database API - Get the whole pathway ID from KEGG database.
+##' KEGG Database API - Get the whole pathway ID from KEGG database
 ##'
 ##' Get the pathway ID and annoation of a given KEGG species ID.
 ##' @title List pathway of a given species ID
@@ -116,7 +116,7 @@ getKEGGPathAnno <- function(specID){
 }
 
 
-##' KEGG Database API - Get the pathway and genes.
+##' KEGG Database API - Get the pathway and genes
 ##'
 ##' Get the pathway and genes according to KEGG species ID.
 ##' @title List pathways and genes of a given KEGG species ID

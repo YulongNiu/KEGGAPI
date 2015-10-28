@@ -3,6 +3,7 @@
 ##' getKEGGGeneInfo(): Get gene information. This function supports multiple querys.
 ##'
 ##' ExtractProLocus(): Extract prokaryotic gene location.
+##' 
 ##' @title Get gene informatino
 ##' @inheritParams getKEGGGeneSeq
 ##' @return A string vectors.

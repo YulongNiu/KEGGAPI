@@ -61,4 +61,5 @@ Yulong Niu \email{niuylscu@gmail.com}
 \seealso{
 getKEGGTIDGeneSeq
 }
+\keyword{internal}
 
