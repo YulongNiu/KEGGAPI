@@ -132,7 +132,6 @@ doTenInfo <- function(tenWebInfo) {
 ##' names(locusVec) <- c('eco:b4600', 'ece:Z5100',
 ##' 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
 ##' ExtractProLocus(locusVec)
-##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom stringr str_extract_all
 ##' @rdname geneInfo
 ##' @export
