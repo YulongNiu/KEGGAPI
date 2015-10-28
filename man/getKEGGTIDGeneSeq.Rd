@@ -11,7 +11,7 @@ getKEGGTIDGeneSeq(TIDs, seqType = "aaseq", n = 1)
 
 \item{seqType}{Choose nucleotide acid (ntseq) or amino acid (aaseq) seqences, and the default is amino acid sequences.}
 
-\item{n}{The number of CPUs or processors, and the default value is 4.}
+\item{n}{The number of CPUs or processors, and the default value is 1.}
 }
 \value{
 A BStringSet

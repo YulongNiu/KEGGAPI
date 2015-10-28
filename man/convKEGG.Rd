@@ -35,7 +35,7 @@ For chemical substance convert
 
 \item{convertType}{set to be "database" or "identity".}
 
-\item{n}{The number of CPUs or processors, and the default value is 4.}
+\item{n}{The number of CPUs or processors, and the default value is 1.}
 }
 \value{
 A matrix that the first column is "targetDB"

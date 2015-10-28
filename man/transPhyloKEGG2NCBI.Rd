@@ -9,7 +9,7 @@ transPhyloKEGG2NCBI(specIDs, n = 1)
 \arguments{
 \item{specIDs}{A vector of KEGG species IDs, for example c('hsa', 'eco').}
 
-\item{n}{The number of CPUs or processors, and the default value is 4.}
+\item{n}{The number of CPUs or processors, and the default value is 1.}
 }
 \value{
 The corresponding NCBI Taxonomy ID in character vector.

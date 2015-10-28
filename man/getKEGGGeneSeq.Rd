@@ -4,23 +4,23 @@
 \alias{getKEGGGeneSeq}
 \title{Get protein and gene sequences}
 \usage{
-getKEGGGeneSeq(KEGGID, seqType = "aaseq", n = 1)
+getKEGGGeneSeq(KEGGGeneIDs, seqType = "aaseq", n = 1)
 }
 \arguments{
-\item{KEGGID}{A vector of KEGG IDs. Seqences from different species could be combined together.}
+\item{KEGGGeneIDs}{A vector of KEGG IDs. Seqences from different species could be combined together.}
 
 \item{seqType}{Choose nucleotide acid (ntseq) or amino acid (aaseq) seqences, and the default is amino acid sequences.}
 
-\item{n}{The number of CPUs or processors, and the default value is 4.}
+\item{n}{The number of CPUs or processors, and the default value is 1.}
 }
 \value{
-A BStringSet
+A BStringSet.
 }
 \description{
 KEGG Database API - Get the nucleotide acid and amino acid sequences
 }
 \details{
-Get the protein and gene sequences in fasta format. This function support mutiple querys.
+Get protein and gene sequences in fasta format. This function supports mutiple querys.
 }
 \examples{
 ## two amino acid seqences from different sepecies with 2 threads.

@@ -183,12 +183,12 @@ getProID <- function(specID){
 
 ##' KEGG Database API - Get the nucleotide acid and amino acid sequences 
 ##'
-##' Get the protein and gene sequences in fasta format. This function support mutiple querys.
+##' Get protein and gene sequences in fasta format. This function supports mutiple querys.
 ##' @title Get protein and gene sequences
 ##' @param KEGGGeneIDs A vector of KEGG IDs. Seqences from different species could be combined together.
 ##' @param seqType Choose nucleotide acid (ntseq) or amino acid (aaseq) seqences, and the default is amino acid sequences.
-##' @param n The number of CPUs or processors, and the default value is 4.
-##' @return A BStringSet 
+##' @param n The number of CPUs or processors, and the default value is 1.
+##' @return A BStringSet.
 ##' @examples
 ##' ## two amino acid seqences from different sepecies with 2 threads.
 ##' twoAASeqs <- getKEGGGeneSeq(c('mja:MJ_0011', 'hsa:10458'), n = 2)
@@ -225,10 +225,13 @@ getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', n = 1){
   ## register multiple core
   registerDoParallel(cores = n)
 
+  ## base url
+  urlBase <- 'http://rest.kegg.jp/get/'
+
   doTen <- function(tenWebSeq, seqTypeBio = seqType){
-    ## USE: a temprary function to deal with the return web "10 seqence", and it also for less ten or without coding sequence. The basic idea to split sequences is by the marker of '(A)' for amino acid sequences and '(N)' for nucleotide sequences.
+    ## USE: a temporary function to deal with the return web "10 seqence", and it also for less ten or without coding sequence. The basic idea to split sequences is by the marker of '(A)' for amino acid sequences and '(N)' for nucleotide sequences.
     ## INPUT: return results from function getURL()
-    ## OUTPUT: BStingSet or NA (for the case one gene has no cording protein sequence)
+    ## OUTPUT: BStingSet or NULL (for the case one gene has no cording protein sequence)
     if (nchar(tenWebSeq) != 0){
       splitTen <- unlist(strsplit(tenWebSeq, split = '\n', fixed = TRUE))
       if (seqTypeBio == 'aaseq') {
@@ -264,17 +267,18 @@ getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', n = 1){
   ## deal with ten sequences each time
   print(paste0('Input ', length(KEGGGeneIDs), ' gene IDs.'))
   proSeq <- foreach(i = cutMat[1, ], j = cutMat[2, ], .combine = append) %dopar% {
-    print(paste0('It is getting ', j , ' seqeunces in a total of ', length(KEGGGeneIDs), '.'))
+    print(paste0('It is getting ', j , ' in a total of ', length(KEGGGeneIDs), '.'))
     if (i == j){
       ## only one input KEGG ID
-      linkKEGGPro <- paste('http://rest.kegg.jp/get/', KEGGGeneIDs[i], '/', seqType, sep = '')
+      seqUrl <- paste0(urlBase, KEGGGeneIDs[i], '/', seqType)
     } else {
       mergeID <- paste(KEGGGeneIDs[i:j], collapse = "+")
-      linkKEGGPro <- paste('http://rest.kegg.jp/get/', mergeID, '/', seqType, sep = '')
+      seqUrl <- paste0(urlBase, mergeID, '/', seqType)
     }
-    webProSeq <- getURL(linkKEGGPro)
+    webStr <- getURL(seqUrl)
 
-    doTen(webProSeq)
+    geneSeq <- doTen(webStr)
+    return(geneSeq)
   }
 
   ## stop multiple core
@@ -284,8 +288,6 @@ getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', n = 1){
 
 }
 
-
-getKEGGGeneInfo <- function(KEGGGeneIDs, n = 1)
 
 
 
