@@ -60,3 +60,51 @@ getcontent <- function(s, g) {
 
   return(subText)
 }
+
+
+
+
+
+##' Enforce to get URL
+##'
+##' If any errors occur when getting the url, this functions holds the error and try to get url again. An infinit loop may happen if the input url could not be resoved.
+##' @title Enforce getting url
+##' @param tryUrl url
+##' @return retured value from getURL()
+##' @examples
+##' \dontrun{
+##' ## It will cause infinit loop
+##' testUrl <- 'http://www.test1111111111.com/'
+##' EnforceGetURL(testUrl)
+##' }
+##' @author Yulong Niu \email{niuylscu@@gmail.com}
+##' @importFrom RCurl getURL
+##' @export
+##'
+##' 
+EnforceGetURL <- function(tryUrl) {
+  
+  while (TRUE) {
+    
+    catchUrl <- tryCatch(
+    {
+      ## "urlStr" is a string vector
+      urlStr <- getURL(tryUrl)
+      return(urlStr)
+    },
+    error = function(err){
+      print('Try to resolve host again.')
+      urlStr <- 'IT FAILED'
+      return(urlStr)
+    },
+    finally = {})
+
+    if (catchUrl != 'IT FAILED') {
+      break
+    } else {}
+    
+  }
+  
+  return(catchUrl)
+}
+

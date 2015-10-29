@@ -13,7 +13,7 @@ getKEGGPathGenes(specID)
 A List named with KEGG pathway IDs, and each element of the list contains the KEGG gene IDs.
 }
 \description{
-KEGG Database API - Get the pathway and genes.
+KEGG Database API - Get the pathway and genes
 }
 \details{
 Get the pathway and genes according to KEGG species ID.
