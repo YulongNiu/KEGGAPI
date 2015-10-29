@@ -151,6 +151,7 @@ getKEGGPathGenes <- function(specID){
 ##'
 ##' Get the KEGG protein ID list and annotation.
 ##' @title Get whole KEGG IDs and annotation
+##' @param ... Parameters inherited from webTable().
 ##' @inheritParams getKEGGPathAnno
 ##' @return A matrix of KEGG IDs and annotation
 ##' @examples
@@ -168,13 +169,13 @@ getKEGGPathGenes <- function(specID){
 ##' @export
 ##'
 ##' 
-getProID <- function(specID){
+getProID <- function(specID, ...){
   
   ## get KEGG ID annotation list
   url <- paste('http://rest.kegg.jp/list/', specID, sep = '')
 
   ## transfer webpage into a matrix
-  speIDAnno <- webTable(url, ncol = 2)
+  speIDAnno <- webTable(url, ncol = 2, ...)
 
   return(speIDAnno)
 }

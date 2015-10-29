@@ -4,6 +4,7 @@
 ##' @title Get R matrix from weblink
 ##' @param url The weblink.
 ##' @param ncol The column number of the matrix.
+##' @param enforceURL whether to enfoce get get url until the results returned. The default value is "FALSE".
 ##' @return A R matrix
 ##' @examples
 ##' pathUrl <- 'http://rest.kegg.jp/list/pathway'
@@ -13,9 +14,13 @@
 ##' @export
 ##'
 ##' 
-webTable <- function(url, ncol) {
+webTable <- function(url, ncol, enforceURL = FALSE) {
 
-  webPage <-getURL(url)
+  if (enforceURL) {
+    webPage <- EnforceGetURL(url)
+  } else {
+    webPage <- getURL(url) 
+  }
 
   ## transfer webpage into a matrix
   webMat <- unlist(strsplit(webPage, split = '\n', fixed = TRUE))

@@ -6,7 +6,7 @@
 \alias{getKEGGGeneInfo}
 \title{Get gene informatino}
 \usage{
-getKEGGGeneInfo(KEGGGeneIDs, n = 1, enforceURL = FALSE)
+getKEGGGeneInfo(KEGGGeneIDs, enforceURL = FALSE, n = 1)
 
 doTenInfo(tenWebInfo)
 
@@ -15,9 +15,9 @@ ExtractProLocus(locusStr)
 \arguments{
 \item{KEGGGeneIDs}{A vector of KEGG IDs. Seqences from different species could be combined together.}
 
-\item{n}{The number of CPUs or processors, and the default value is 1.}
-
 \item{enforceURL}{whether to enfoce get get url until the results returned. The default value is "FALSE".}
+
+\item{n}{The number of CPUs or processors, and the default value is 1.}
 
 \item{tenWebInfo}{return results from function getURL().}
 

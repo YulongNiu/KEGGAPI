@@ -6,7 +6,7 @@
 ##' 
 ##' @title Get gene informatino
 ##' @inheritParams getKEGGGeneSeq
-##' @param enforceURL whether to enfoce get get url until the results returned. The default value is "FALSE".
+##' @inheritParams webTable
 ##' @return A string vectors.
 ##' @examples
 ##' genes <- c('eco:b4600', 'ece:Z5100', 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
@@ -20,7 +20,7 @@
 ##' @export
 ##'
 ##' 
-getKEGGGeneInfo <- function(KEGGGeneIDs, n = 1, enforceURL = FALSE) {
+getKEGGGeneInfo <- function(KEGGGeneIDs, enforceURL = FALSE, n = 1) {
 
   ## register multiple core
   registerDoParallel(cores = n)
