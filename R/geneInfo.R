@@ -3,8 +3,10 @@
 ##' getKEGGGeneInfo(): Get gene information. This function supports multiple querys.
 ##'
 ##' ExtractProLocus(): Extract prokaryotic gene location.
+##' 
 ##' @title Get gene informatino
 ##' @inheritParams getKEGGGeneSeq
+##' @inheritParams webTable
 ##' @return A string vectors.
 ##' @examples
 ##' genes <- c('eco:b4600', 'ece:Z5100', 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
@@ -18,7 +20,7 @@
 ##' @export
 ##'
 ##' 
-getKEGGGeneInfo <- function(KEGGGeneIDs, n = 1) {
+getKEGGGeneInfo <- function(KEGGGeneIDs, enforceURL = FALSE, n = 1) {
 
   ## register multiple core
   registerDoParallel(cores = n)
@@ -40,9 +42,15 @@ getKEGGGeneInfo <- function(KEGGGeneIDs, n = 1) {
       mergeID <- mergeID <- paste(KEGGGeneIDs[i:j], collapse = "+")
       infoUrl <- paste0(urlBase, mergeID)
     }
-    webStr <- getURL(infoUrl)
+
+    if (enforceURL) {
+      webStr <- EnforceGetURL(infoUrl)
+    } else {
+      webStr <- getURL(infoUrl) 
+    }
 
     geneAnno <- doTenInfo(webStr)
+    
     return(geneAnno)
   }
 
@@ -131,7 +139,6 @@ doTenInfo <- function(tenWebInfo) {
 ##' names(locusVec) <- c('eco:b4600', 'ece:Z5100',
 ##' 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
 ##' ExtractProLocus(locusVec)
-##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom stringr str_extract_all
 ##' @rdname geneInfo
 ##' @export
@@ -173,4 +180,5 @@ ExtractProLocus <- function(locusStr) {
   
   return(locMat)
 }
+
 

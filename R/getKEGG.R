@@ -1,4 +1,4 @@
-##' KEGG Database API - Get species KEGG/NCBI ID.
+##' KEGG Database API - Get species KEGG/NCBI ID
 ##'
 ##' Get the phylogenetic information of given species.
 ##' It supports both batch input and regular expression search.
@@ -63,7 +63,7 @@ getKEGGPhylo <- function(speList, speType = 'KEGG', whole = FALSE){
 }
 
 
-##' KEGG Database API - Get the KEGG orthology list.
+##' KEGG Database API - Get the KEGG orthology list
 ##'
 ##' Get the KEGG orthology list by a given KEGG KO ID.
 ##' @title Get KEGG orthology.
@@ -91,7 +91,7 @@ getKEGGKO <- function(KOID){
 }
 
 
-##' KEGG Database API - Get the whole pathway ID from KEGG database.
+##' KEGG Database API - Get the whole pathway ID from KEGG database
 ##'
 ##' Get the pathway ID and annoation of a given KEGG species ID.
 ##' @title List pathway of a given species ID
@@ -116,7 +116,7 @@ getKEGGPathAnno <- function(specID){
 }
 
 
-##' KEGG Database API - Get the pathway and genes.
+##' KEGG Database API - Get the pathway and genes
 ##'
 ##' Get the pathway and genes according to KEGG species ID.
 ##' @title List pathways and genes of a given KEGG species ID
@@ -151,6 +151,7 @@ getKEGGPathGenes <- function(specID){
 ##'
 ##' Get the KEGG protein ID list and annotation.
 ##' @title Get whole KEGG IDs and annotation
+##' @param ... Parameters inherited from webTable().
 ##' @inheritParams getKEGGPathAnno
 ##' @return A matrix of KEGG IDs and annotation
 ##' @examples
@@ -168,13 +169,13 @@ getKEGGPathGenes <- function(specID){
 ##' @export
 ##'
 ##' 
-getProID <- function(specID){
+getProID <- function(specID, ...){
   
   ## get KEGG ID annotation list
   url <- paste('http://rest.kegg.jp/list/', specID, sep = '')
 
   ## transfer webpage into a matrix
-  speIDAnno <- webTable(url, ncol = 2)
+  speIDAnno <- webTable(url, ncol = 2, ...)
 
   return(speIDAnno)
 }

@@ -24,7 +24,7 @@ and the default value is FALSE.}
 Matrix of species information.
 }
 \description{
-KEGG Database API - Get species KEGG/NCBI ID.
+KEGG Database API - Get species KEGG/NCBI ID
 }
 \details{
 Get the phylogenetic information of given species.

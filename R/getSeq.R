@@ -5,6 +5,7 @@
 ##' @param KEGGGeneIDs A vector of KEGG IDs. Seqences from different species could be combined together.
 ##' @param seqType Choose nucleotide acid (ntseq) or amino acid (aaseq) seqences, and the default is amino acid sequences.
 ##' @param n The number of CPUs or processors, and the default value is 1.
+##' @inheritParams webTable
 ##' @return A BStringSet.
 ##' @examples
 ##' ## two amino acid seqences from different sepecies with 2 threads.
@@ -38,7 +39,7 @@
 ##' @export
 ##'
 ##' 
-getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', n = 1){
+getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', enforceURL = FALSE, n = 1){
 
   ## register multiple core
   registerDoParallel(cores = n)
@@ -61,7 +62,12 @@ getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', n = 1){
       mergeID <- paste(KEGGGeneIDs[i:j], collapse = "+")
       seqUrl <- paste0(urlBase, mergeID, '/', seqType)
     }
-    webStr <- getURL(seqUrl)
+
+    if (enforceURL) {
+      webStr <- EnforceGetURL(seqUrl)
+    } else {
+      webStr <- getURL(seqUrl) 
+    }
 
     geneSeq <- doTen(webStr, seqType)
     return(geneSeq)
@@ -82,6 +88,9 @@ getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', n = 1){
 ##' @importFrom foreach foreach %do%
 ##' @rdname getSeq
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
+##' @keywords internal
+##'
+##' 
 doTen <- function(tenWebSeq, seqType){
   ## USE: a temporary function to deal with the return web "10 seqence", and it also for less ten or without coding sequence. The basic idea to split sequences is by the marker of '(A)' for amino acid sequences and '(N)' for nucleotide sequences.
   if (nchar(tenWebSeq) != 0){

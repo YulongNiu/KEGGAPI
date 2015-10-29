@@ -4,12 +4,14 @@
 \alias{webTable}
 \title{Get R matrix from weblink}
 \usage{
-webTable(url, ncol)
+webTable(url, ncol, enforceURL = FALSE)
 }
 \arguments{
 \item{url}{The weblink.}
 
 \item{ncol}{The column number of the matrix.}
+
+\item{enforceURL}{whether to enfoce get get url until the results returned. The default value is "FALSE".}
 }
 \value{
 A R matrix

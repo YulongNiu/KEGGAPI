@@ -52,7 +52,7 @@ transPhyloKEGG2NCBI <- function(specIDs, n = 1){
 }
 
 
-##' KEGG Database Additional API - Get KEGG organism basic information.
+##' KEGG Database Additional API - Get KEGG organism basic information
 ##'
 ##' The KEGG organism basic information is retrieved from the webpage. If references are included, a four-row matrix ("Reference", "Authors", "Title", "Journal") will be returned. If chromosome are included, a three-row matrix ("Chromosome", "Sequence", and "Length") will be returned. The similar process will be applied to plasmid.
 ##' @title Get KEGG organism basic information

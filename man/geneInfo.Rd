@@ -6,7 +6,7 @@
 \alias{getKEGGGeneInfo}
 \title{Get gene informatino}
 \usage{
-getKEGGGeneInfo(KEGGGeneIDs, n = 1)
+getKEGGGeneInfo(KEGGGeneIDs, enforceURL = FALSE, n = 1)
 
 doTenInfo(tenWebInfo)
 
@@ -14,6 +14,8 @@ ExtractProLocus(locusStr)
 }
 \arguments{
 \item{KEGGGeneIDs}{A vector of KEGG IDs. Seqences from different species could be combined together.}
+
+\item{enforceURL}{whether to enfoce get get url until the results returned. The default value is "FALSE".}
 
 \item{n}{The number of CPUs or processors, and the default value is 1.}
 
@@ -46,8 +48,6 @@ names(locusVec) <- c('eco:b4600', 'ece:Z5100',
 ExtractProLocus(locusVec)
 }
 \author{
-Yulong Niu \email{niuylscu@gmail.com}
-
 Yulong Niu \email{niuylscu@gmail.com}
 
 Yulong Niu \email{niuylscu@gmail.com}

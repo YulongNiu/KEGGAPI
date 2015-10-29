@@ -13,7 +13,7 @@ getKEGGKO(KOID)
 A character vector of KEGG gene IDs
 }
 \description{
-KEGG Database API - Get the KEGG orthology list.
+KEGG Database API - Get the KEGG orthology list
 }
 \details{
 Get the KEGG orthology list by a given KEGG KO ID.

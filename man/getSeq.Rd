@@ -5,7 +5,7 @@
 \alias{getKEGGGeneSeq}
 \title{Get protein and gene sequences}
 \usage{
-getKEGGGeneSeq(KEGGGeneIDs, seqType = "aaseq", n = 1)
+getKEGGGeneSeq(KEGGGeneIDs, seqType = "aaseq", enforceURL = FALSE, n = 1)
 
 doTen(tenWebSeq, seqType)
 }
@@ -13,6 +13,8 @@ doTen(tenWebSeq, seqType)
 \item{KEGGGeneIDs}{A vector of KEGG IDs. Seqences from different species could be combined together.}
 
 \item{seqType}{Choose nucleotide acid (ntseq) or amino acid (aaseq) seqences, and the default is amino acid sequences.}
+
+\item{enforceURL}{whether to enfoce get get url until the results returned. The default value is "FALSE".}
 
 \item{n}{The number of CPUs or processors, and the default value is 1.}
 
@@ -61,4 +63,5 @@ Yulong Niu \email{niuylscu@gmail.com}
 \seealso{
 getKEGGTIDGeneSeq
 }
+\keyword{internal}
 

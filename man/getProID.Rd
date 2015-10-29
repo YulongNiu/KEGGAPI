@@ -4,10 +4,12 @@
 \alias{getProID}
 \title{Get whole KEGG IDs and annotation}
 \usage{
-getProID(specID)
+getProID(specID, ...)
 }
 \arguments{
 \item{specID}{KEGSS species org code or T number , for example "hsa" or "T01001".}
+
+\item{...}{Parameters inherited from webTable().}
 }
 \value{
 A matrix of KEGG IDs and annotation
