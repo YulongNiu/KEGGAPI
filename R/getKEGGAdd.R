@@ -19,8 +19,6 @@
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom stringr str_extract
 ##' @export
-##'
-##' 
 transPhyloKEGG2NCBI <- function(specIDs, n = 1){
 
   ## register multiple core
@@ -67,8 +65,6 @@ transPhyloKEGG2NCBI <- function(specIDs, n = 1){
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.genome.jp/kegg-bin/show_organism?org=T01001}
 ##' @export
-##'
-##' 
 getKEGGSpeInfo <- function(specID) {
   
   KEGGLink <- paste('http://www.genome.jp/kegg-bin/show_organism?org=', specID, sep = '')
@@ -171,8 +167,6 @@ getKEGGSpeInfo <- function(specID) {
 ##' @importFrom Biostrings BStringSet
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @keywords internal
-##'
-##' 
 singleTIDSeq <- function(TID, seqType = 'aaseq') {
 
   ## read in xml
@@ -215,8 +209,6 @@ singleTIDSeq <- function(TID, seqType = 'aaseq') {
 ##' @references \url{http://www.genome.jp/dbget-bin/www_bget?-f+-n+n+t10017:100009}
 ##' @seealso getKEGGGeneSeq
 ##' @export
-##'
-##' 
 getKEGGTIDGeneSeq <- function(TIDs, seqType = 'aaseq', n = 1) {
 
   ## register multiple core
@@ -251,7 +243,6 @@ getKEGGTIDGeneSeq <- function(TIDs, seqType = 'aaseq', n = 1) {
 ##' @importFrom XML readHTMLTable
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @export
-##' 
 getKEGGGeneMotif <- function(geneID, hasAddInfo = FALSE) {
   
   ## motif webpage URL
@@ -302,7 +293,6 @@ getKEGGGeneMotif <- function(geneID, hasAddInfo = FALSE) {
 ##' @importFrom xml2 read_html xml_find_all xml_text
 ##' @importFrom stringr str_trim
 ##' @export
-##' 
 getKEGGMotifList <- function(motifName) {
 
   ## motif list url
@@ -338,7 +328,6 @@ getKEGGMotifList <- function(motifName) {
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom RCurl getURL
 ##' @export
-##' 
 getKEGGMotifList2 <- function(motifName) {
 
   ## motif list url

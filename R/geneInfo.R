@@ -18,8 +18,6 @@
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @rdname geneInfo
 ##' @export
-##'
-##' 
 getKEGGGeneInfo <- function(KEGGGeneIDs, enforceURL = FALSE, n = 1) {
 
   ## register multiple core
@@ -68,8 +66,6 @@ getKEGGGeneInfo <- function(KEGGGeneIDs, enforceURL = FALSE, n = 1) {
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @rdname geneInfo
 ##' @keywords internal
-##'
-##' 
 doTenInfo <- function(tenWebInfo) {
   ## USE: a temporary function to deal with the return web "10 genes", and it also for less ten or without gene information.
   ## oneAnno <- c('ENTRY       DR_0001           CDS       T00025\nDEFINITION  (RefSeq) DNA polymerase III subunit beta\nORTHOLOGY   K02338  DNA polymerase III subunit beta [EC:2.7.7.7]\nORGANISM    dra  Deinococcus radiodurans\nPATHWAY     dra00230  Purine metabolism\n            dra00240  Pyrimidine metabolism\n            dra01100  Metabolic pathways\n            dra03030  DNA replication\n            dra03430  Mismatch repair\n            dra03440  Homologous recombination\nBRITE       KEGG Orthology (KO) [BR:dra00001]\n             Metabolism\n              Nucleotide metabolism\n               00230 Purine metabolism\n                DR_0001\n               00240 Pyrimidine metabolism\n                DR_0001\n             Genetic Information Processing\n              Replication and repair\n               03030 DNA replication\n                DR_0001\n               03430 Mismatch repair\n                DR_0001\n               03440 Homologous recombination\n                DR_0001\n            Enzymes [BR:dra01000]\n             2. Transferases\n              2.7  Transferring phosphorus-containing groups\n               2.7.7  Nucleotidyltransferases\n                2.7.7.7  DNA-directed DNA polymerase\n                 DR_0001\n            DNA replication proteins [BR:dra03032]\n             Prokaryotic Type\n              DNA Replication Elongation Factors\n               Elongation factors (bacterial)\n                DNA polymerase III holoenzyme\n                 DR_0001\n            DNA repair and recombination proteins [BR:dra03400]\n             Prokaryotic Type\n              SSBR (single strand breaks repair)\n               MMR (mismatch exicision repair)\n                DNA polymerase III holoenzyme\n                 DR_0001\nPOSITION    1:complement(1..1182)\nMOTIF       Pfam: DNA_pol3_beta DNA_pol3_beta_2 DNA_pol3_beta_3\nDBLINKS     NCBI-ProteinID: NP_293727\n            NCBI-GI: 15805043\n            NCBI-GeneID: 1799546\n            UniProt: Q9RYE8\nAASEQ       393\n            MMKANVTKKTLNEGLGLLERVIPSRSSNPLLTALKVETSEGGLTLSGTNLEIDLSCFVPA\n            EVQQPENFVVPAHLFAQIVRNLGGELVELELSGQELSVRSGGSDFKLQTGDIEAYPPLSF\n            PAQADVSLDGGELSRAFSSVRYAASNEAFQAVFRGIKLEHHGESARVVASDGYRVAIRDF\n            PASGDGKNLIIPARSVDELIRVLKDGEARFTYGDGMLTVTTDRVKMNLKLLDGDFPDYER\n            VIPKDIKLQVTLPATALKEAVNRVAVLADKNANNRVEFLVSEGTLRLAAEGDYGRAQDTL\n            SVTQGGTEQAMSLAFNARHVLDALGPIDGDAELLFSGSTSPAIFRARRWGRRVYGGHGHA\n            ARLRGLLRPLRGMSALAHHPESSPPLEPRPEFA\nNTSEQ       1182\n            gtgatgaaagccaatgtcaccaaaaagaccctgaacgagggcctgggcctgctcgaacgt\n            gtgattccgagccgttcgagcaatccgctgctgacggcgctgaaggtcgaaacgtcggaa\n            ggtggcctgacgctgagcggcaccaacctggaaatcgacctgtcgtgcttcgtgcctgcc\n            gaggtgcagcagcccgaaaacttcgtggtgccggcgcacctgttcgcgcaaatcgttcgc\n            aacctcggcggtgagctcgtcgaactcgaactgagcggccaggaactctcggtgcgctcg\n            ggcggctcagatttcaagctccagaccggtgacatcgaagcgtacccgccactctctttc\n            cccgcacaggccgatgtgagcctggacggcggcgaactgtcccgcgccttttccagcgtg\n            cgctacgcggcaagcaacgaggcgtttcaggcggtgtttcgcggcattaagcttgagcac\n            cacggcgagagcgcccgcgtggtggcgtccgacggttaccgggtggctatccgcgacttt\n            ccggcgagcggcgacggcaaaaacctgattattcccgcccgcagcgtggacgaactgatt\n            cgcgtgctcaaggacggcgaggcgcggttcacctacggcgacggcatgctcaccgtgacc\n            accgaccgcgtgaagatgaacctcaagctgctcgacggtgattttcccgactacgagcgg\n            gtcattcccaaggacatcaaacttcaggtgacactgcccgccaccgccctcaaggaagcg\n            gtcaaccgtgtggccgtgctggccgacaaaaacgccaacaaccgcgtcgagtttctggtg\n            tccgaaggcactctgcgcctcgctgcggagggcgactatggccgcgctcaggacacgctc\n            agcgtcacccagggcggcaccgagcaggcgatgagcctcgccttcaacgctcgccatgtg\n            ctcgatgcgctgggcccgattgacggagacgccgagctgctgttctccgggtccaccagc\n            cccgccattttccgcgcccgtaggtgggggaggcgggtatatggcggtcatggtcacgct\n            gcgcgtttaaggggccttctgaggccgttacggggcatgtctgccctggcccatcacccg\n            gaaagttcaccgccgcttgaaccgaggccagagttcgcgtga')
@@ -142,8 +138,6 @@ doTenInfo <- function(tenWebInfo) {
 ##' @importFrom stringr str_extract_all
 ##' @rdname geneInfo
 ##' @export
-##'
-##' 
 ExtractProLocus <- function(locusStr) {
   ## The basic idea is:
   ## step 1: determine the genome or plasmid by ":". If the returned length of element is 1, then only one genome; else if only numeric element return, for example, "1" and "2", it means multiple genomes; the rest should be plasmid.
@@ -156,7 +150,10 @@ ExtractProLocus <- function(locusStr) {
   locGenome <- rep('genome1', length(locusStr))
   locLen <- sapply(locusStr, length)
   mulLogic <- locLen > 1
-  locGenome[mulLogic] <- sapply(locusStr[which(mulLogic)], '[[', 1)
+  if (sum(mulLogic) != 0) {
+    ## if not change, if sum(mulLogic) == 0, locGenome will return a list
+    locGenome[mulLogic] <- sapply(locusStr[mulLogic], '[[', 1)
+  } else {}
   mulGenomeLogic <- grepl('^\\d+$', locGenome)
   locGenome[mulGenomeLogic] <- paste0('genome', locGenome[mulGenomeLogic])
 

@@ -37,8 +37,6 @@
 ##' @rdname getSeq
 ##' @seealso getKEGGTIDGeneSeq
 ##' @export
-##'
-##' 
 getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', enforceURL = FALSE, n = 1){
 
   ## register multiple core
@@ -89,8 +87,6 @@ getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', enforceURL = FALSE, n
 ##' @rdname getSeq
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @keywords internal
-##'
-##' 
 doTen <- function(tenWebSeq, seqType){
   ## USE: a temporary function to deal with the return web "10 seqence", and it also for less ten or without coding sequence. The basic idea to split sequences is by the marker of '(A)' for amino acid sequences and '(N)' for nucleotide sequences.
   if (nchar(tenWebSeq) != 0){
