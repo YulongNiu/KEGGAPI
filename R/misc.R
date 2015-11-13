@@ -12,8 +12,6 @@
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom RCurl getURL
 ##' @export
-##'
-##' 
 webTable <- function(url, ncol, enforceURL = FALSE) {
 
   if (enforceURL) {
@@ -57,8 +55,6 @@ webTable <- function(url, ncol, enforceURL = FALSE) {
 ##' getcontent(testStr, regList[[1]])
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @export
-##'
-##' 
 getcontent <- function(s, g) {
   
   subText <- substring(s, g, g + attr(g, 'match.length') - 1)
@@ -85,8 +81,6 @@ getcontent <- function(s, g) {
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom RCurl getURL
 ##' @export
-##'
-##' 
 EnforceGetURL <- function(tryUrl) {
   
   while (TRUE) {

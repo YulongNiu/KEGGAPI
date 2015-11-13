@@ -28,8 +28,6 @@
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
-##'
-##' 
 getKEGGPhylo <- function(speList, speType = 'KEGG', whole = FALSE){
 
   if (!(speType %in% c('KEGG', 'regexpr', 'phylo', 'Tnum'))) {
@@ -74,8 +72,6 @@ getKEGGPhylo <- function(speList, speType = 'KEGG', whole = FALSE){
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
-##'
-##' 
 getKEGGKO <- function(KOID){
 
   ## get KO webpage
@@ -102,8 +98,6 @@ getKEGGKO <- function(KOID){
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
-##' 
-##'
 getKEGGPathAnno <- function(specID){
 
   ## get KEGG pathway annotation list
@@ -127,7 +121,6 @@ getKEGGPathAnno <- function(specID){
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
-##'
 getKEGGPathGenes <- function(specID){
 
   ## get KEGG pathway list
@@ -167,13 +160,11 @@ getKEGGPathGenes <- function(specID){
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/}
 ##' @export
-##'
-##' 
 getProID <- function(specID, ...){
   
   ## get KEGG ID annotation list
   url <- paste('http://rest.kegg.jp/list/', specID, sep = '')
-
+  
   ## transfer webpage into a matrix
   speIDAnno <- webTable(url, ncol = 2, ...)
 
@@ -241,8 +232,6 @@ getProID <- function(specID, ...){
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @references \url{http://www.kegg.jp/kegg/rest/keggapi.html}
 ##' @export
-##'
-##' 
 convKEGG <- function(targetDB, sourceEntry, convertType = 'database', n = 1) {
 
   if (convertType == 'identity') {
