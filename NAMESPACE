@@ -2,6 +2,7 @@
 
 export(EnforceGetURL)
 export(ExtractLocus)
+export(ExtractMotif)
 export(convKEGG)
 export(getKEGGGeneInfo)
 export(getKEGGGeneMotif)

@@ -2,15 +2,18 @@
 % Please edit documentation in R/geneInfo.R
 \name{getKEGGGeneInfo}
 \alias{ExtractLocus}
+\alias{ExtractMotif}
 \alias{doTenInfo}
 \alias{getKEGGGeneInfo}
-\title{Get gene informatino}
+\title{Get gene information}
 \usage{
 getKEGGGeneInfo(KEGGGeneIDs, enforceURL = FALSE, n = 1)
 
 doTenInfo(tenWebInfo)
 
 ExtractLocus(locusStr)
+
+ExtractMotif(motifStr)
 }
 \arguments{
 \item{KEGGGeneIDs}{A vector of KEGG IDs. Seqences from different species could be combined together.}
@@ -22,11 +25,15 @@ ExtractLocus(locusStr)
 \item{tenWebInfo}{return results from function getURL().}
 
 \item{locusStr}{named location strings whose names are gene names.}
+
+\item{motifStr}{named motif strings whole names are gene names}
 }
 \value{
 getKEGGGeneInfo(): A string vectors containing gene informations
 
-ExtractLocus(): a 5-column matrix, 1st gene names, 2ed is genome,  3rd is start, 4th is end, and the 5th is the strand.
+ExtractLocus(): A matrix: 1st gene names, 2ed is genome,  3rd is start, 4th is end, and the 5th is the strand.
+
+ExtractMotif(): A list: each element is a motif vector.
 
 a list each contains the annotation items (for the case without annotation returns NULL).
 }
@@ -37,6 +44,8 @@ KEGG Database API - Get gene information
 getKEGGGeneInfo(): Get gene information. This function supports multiple querys.
 
 ExtractLocus(): Extract prokaryotic gene location.
+
+ExtractMotif(): Extract protein motifs.
 }
 \examples{
 genes <- c('eco:b4600', 'ece:Z5100', 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
@@ -46,8 +55,16 @@ locusVec <- c('complement(join(1631002..1632285,1652755..1652838))', 'complement
 names(locusVec) <- c('eco:b4600', 'ece:Z5100',
 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
 ExtractLocus(locusVec)
+motifVec <- c('Pfam: B_lectin S_locus_glycop',
+'Pfam: VIT1 AlaDh_PNT_C DUF4168 PsbI',
+'Pfam: BRF1 Coilin_N')
+names(motifVec) <- c('ath:AT2G01780', 'ath:AT2G01770',
+'ath:AT2G01800')
+ExtractMotif(motifVec)
 }
 \author{
+Yulong Niu \email{niuylscu@gmail.com}
+
 Yulong Niu \email{niuylscu@gmail.com}
 
 Yulong Niu \email{niuylscu@gmail.com}

@@ -3,6 +3,8 @@
 ##' getKEGGGeneInfo(): Get gene information. This function supports multiple querys.
 ##'
 ##' ExtractLocus(): Extract prokaryotic gene location.
+##'
+##' ExtractMotif(): Extract protein motifs.
 ##' 
 ##' @title Get gene information
 ##' @inheritParams getKEGGGeneSeq
@@ -12,6 +14,8 @@
 ##' getKEGGGeneInfo(): A string vectors containing gene informations
 ##' 
 ##' ExtractLocus(): A matrix: 1st gene names, 2ed is genome,  3rd is start, 4th is end, and the 5th is the strand.
+##'
+##' ExtractMotif(): A list: each element is a motif vector.
 ##' 
 ##' @examples
 ##' genes <- c('eco:b4600', 'ece:Z5100', 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
@@ -129,9 +133,6 @@ doTenInfo <- function(tenWebInfo) {
 }
 
 
-
-
-
 ##' @param locusStr named location strings whose names are gene names.
 ##' @examples
 ##' locusVec <- c('complement(join(1631002..1632285,1652755..1652838))', 'complement(4658240..4658986)',
@@ -183,3 +184,24 @@ ExtractLocus <- function(locusStr) {
 }
 
 
+##' @param motifStr named motif strings whole names are gene names
+##' @examples
+##' motifVec <- c('Pfam: B_lectin S_locus_glycop',
+##' 'Pfam: VIT1 AlaDh_PNT_C DUF4168 PsbI',
+##' 'Pfam: BRF1 Coilin_N')
+##' names(motifVec) <- c('ath:AT2G01780', 'ath:AT2G01770',
+##' 'ath:AT2G01800')
+##' ExtractMotif(motifVec)
+##' @author Yulong Niu \email{niuylscu@@gmail.com}
+##' @rdname geneInfo
+##' @export
+ExtractMotif <- function(motifStr) {
+
+  motifList <- lapply(motifStr, function(x) {
+    eachMotif <- unlist(strsplit(x, split = ' ', fixed = TRUE))
+    eachMotif <- eachMotif[-1]
+    return(eachMotif)
+  })
+
+  return(motifList)
+}
