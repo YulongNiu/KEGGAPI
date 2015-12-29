@@ -5,12 +5,14 @@
 \alias{getKEGGMotifList2}
 \title{Get motif list from KEGG.}
 \usage{
-getKEGGMotifList(motifName)
+getKEGGMotifList(motifName, enforceURL = FALSE)
 
 getKEGGMotifList2(motifName)
 }
 \arguments{
 \item{motifName}{A single KEGG motif ID}
+
+\item{enforceURL}{whether to enfoce get get url until the results returned. The default value is "FALSE".}
 }
 \value{
 A matrix of KEGG genes and description

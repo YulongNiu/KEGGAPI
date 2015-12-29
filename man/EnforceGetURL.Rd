@@ -4,10 +4,12 @@
 \alias{EnforceGetURL}
 \title{Enforce getting url}
 \usage{
-EnforceGetURL(tryUrl)
+EnforceGetURL(tryUrl, FUN)
 }
 \arguments{
 \item{tryUrl}{url}
+
+\item{FUN}{Functions that can readin url, for example the "getURL()" function in the "RCurl" package.}
 }
 \value{
 retured value from getURL()
@@ -21,8 +23,9 @@ If any errors occur when getting the url, this functions holds the error and try
 \examples{
 \dontrun{
 ## It will cause infinit loop
+require(RCurl)
 testUrl <- 'http://www.test1111111111.com/'
-EnforceGetURL(testUrl)
+EnforceGetURL(testUrl, FUN = getURL)
 }
 }
 \author{

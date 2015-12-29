@@ -286,7 +286,7 @@ getKEGGGeneMotif <- function(geneID, hasAddInfo = FALSE) {
 ##' 
 ##' @title Get motif list from KEGG.
 ##' @param motifName A single KEGG motif ID
-##' @importFrom webTable 
+##' @inheritParams webTable 
 ##' @rdname KEGGMotifList
 ##' @return A matrix of KEGG genes and description
 ##' @examples modifMat <- getKEGGMotifList('pf:DUF3675')
