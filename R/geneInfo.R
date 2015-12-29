@@ -51,7 +51,7 @@ getKEGGGeneInfo <- function(KEGGGeneIDs, enforceURL = FALSE, n = 1) {
     }
 
     if (enforceURL) {
-      webStr <- EnforceGetURL(infoUrl)
+      webStr <- EnforceGetURL(infoUrl, FUN = getRUL)
     } else {
       webStr <- getURL(infoUrl) 
     }

@@ -286,6 +286,7 @@ getKEGGGeneMotif <- function(geneID, hasAddInfo = FALSE) {
 ##' 
 ##' @title Get motif list from KEGG.
 ##' @param motifName A single KEGG motif ID
+##' @importFrom webTable 
 ##' @rdname KEGGMotifList
 ##' @return A matrix of KEGG genes and description
 ##' @examples modifMat <- getKEGGMotifList('pf:DUF3675')
@@ -293,11 +294,15 @@ getKEGGGeneMotif <- function(geneID, hasAddInfo = FALSE) {
 ##' @importFrom xml2 read_html xml_find_all xml_text
 ##' @importFrom stringr str_trim
 ##' @export
-getKEGGMotifList <- function(motifName) {
+getKEGGMotifList <- function(motifName, enforceURL = FALSE) {
 
   ## motif list url
   url <- paste0('http://www.genome.jp/dbget-bin/get_linkdb?-t+genes+', motifName)
-  motifXml <- read_html(url)
+  if (enforceURL) {
+    motifXml <- EnforceGetURL(url, FUN = read_html)
+  } else {
+    motifXml <- read_html(url)
+  }
 
   ## <pre>..Definition..</pre>
   ## remove head and tail blanks

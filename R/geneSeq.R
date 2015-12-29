@@ -62,7 +62,7 @@ getKEGGGeneSeq <- function(KEGGGeneIDs, seqType = 'aaseq', enforceURL = FALSE, n
     }
 
     if (enforceURL) {
-      webStr <- EnforceGetURL(seqUrl)
+      webStr <- EnforceGetURL(seqUrl, FUN = getURL)
     } else {
       webStr <- getURL(seqUrl) 
     }

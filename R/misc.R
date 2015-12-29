@@ -15,7 +15,7 @@
 webTable <- function(url, ncol, enforceURL = FALSE) {
 
   if (enforceURL) {
-    webPage <- EnforceGetURL(url)
+    webPage <- EnforceGetURL(url, FUN = getURL)
   } else {
     webPage <- getURL(url) 
   }
@@ -71,24 +71,25 @@ getcontent <- function(s, g) {
 ##' If any errors occur when getting the url, this functions holds the error and try to get url again. An infinit loop may happen if the input url could not be resoved.
 ##' @title Enforce getting url
 ##' @param tryUrl url
+##' @param FUN Functions that can readin url, for example the "getURL()" function in the "RCurl" package.
 ##' @return retured value from getURL()
 ##' @examples
 ##' \dontrun{
 ##' ## It will cause infinit loop
+##' require(RCurl)
 ##' testUrl <- 'http://www.test1111111111.com/'
-##' EnforceGetURL(testUrl)
+##' EnforceGetURL(testUrl, FUN = getURL)
 ##' }
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
-##' @importFrom RCurl getURL
 ##' @export
-EnforceGetURL <- function(tryUrl) {
+EnforceGetURL <- function(tryUrl, FUN) {
   
   while (TRUE) {
     
     catchUrl <- tryCatch(
     {
       ## "urlStr" is a string vector
-      urlStr <- getURL(tryUrl)
+      urlStr <- FUN(tryUrl)
       return(urlStr)
     },
     error = function(err){
