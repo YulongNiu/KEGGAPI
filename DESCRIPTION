@@ -1,7 +1,7 @@
 Package: KEGGAPI
 Title: A package for providing KEGG databases API in R
 Description: KEGG API.
-Version: 0.1.7.2
+Version: 0.1.7.3
 Author: Yulong Niu <niuylscu@gmail.com>
 Maintainer: Yulong Niu <niuylscu@gmail.com>
 Depends:
@@ -18,4 +18,4 @@ Imports:
 ByteCompile: true
 License: GPL
 LazyData: true
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

@@ -2,12 +2,17 @@
 ##'
 ##' getKEGGGeneInfo(): Get gene information. This function supports multiple querys.
 ##'
-##' ExtractProLocus(): Extract prokaryotic gene location.
+##' ExtractLocus(): Extract prokaryotic gene location.
 ##' 
-##' @title Get gene informatino
+##' @title Get gene information
 ##' @inheritParams getKEGGGeneSeq
 ##' @inheritParams webTable
-##' @return A string vectors.
+##' @return
+##' 
+##' getKEGGGeneInfo(): A string vectors containing gene informations
+##' 
+##' ExtractLocus(): A matrix: 1st gene names, 2ed is genome,  3rd is start, 4th is end, and the 5th is the strand.
+##' 
 ##' @examples
 ##' genes <- c('eco:b4600', 'ece:Z5100', 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
 ##' genesInfo <- getKEGGGeneInfo(genes, n = 2)
@@ -128,17 +133,16 @@ doTenInfo <- function(tenWebInfo) {
 
 
 ##' @param locusStr named location strings whose names are gene names.
-##' @return a 5-column matrix, 1st gene names, 2ed is genome,  3rd is start, 4th is end, and the 5th is the strand.
 ##' @examples
 ##' locusVec <- c('complement(join(1631002..1632285,1652755..1652838))', 'complement(4658240..4658986)',
 ##' '3303448..3304455', '1:complement(1..1182)', '2:653..1435', 'MP1:520..1296')
 ##' names(locusVec) <- c('eco:b4600', 'ece:Z5100',
 ##' 'eco:b3160', 'dra:DR_0001', 'dra:DR_A0001', 'dra:DR_B0001')
-##' ExtractProLocus(locusVec)
+##' ExtractLocus(locusVec)
 ##' @importFrom stringr str_extract_all
 ##' @rdname geneInfo
 ##' @export
-ExtractProLocus <- function(locusStr) {
+ExtractLocus <- function(locusStr) {
   ## The basic idea is:
   ## step 1: determine the genome or plasmid by ":". If the returned length of element is 1, then only one genome; else if only numeric element return, for example, "1" and "2", it means multiple genomes; the rest should be plasmid.
   ## step 2: extract locations from a pattern "11111..222222", one gene may have multiple locations.
