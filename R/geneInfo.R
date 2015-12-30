@@ -36,7 +36,7 @@ getKEGGGeneInfo <- function(KEGGGeneIDs, enforceURL = FALSE, n = 1) {
   urlBase <- 'http://rest.kegg.jp/get/'
 
   ## cut the input 'KEGGGeneIDs' into 10
-  cutMat <- CutSeqEqu(length(KEGGGeneIDs), 10)
+   cutMat <- CutSeqEqu(length(KEGGGeneIDs), 10)
 
   ## deal with ten sequences each time
   print(paste0('Input ', length(KEGGGeneIDs), ' gene IDs.'))
@@ -51,9 +51,9 @@ getKEGGGeneInfo <- function(KEGGGeneIDs, enforceURL = FALSE, n = 1) {
     }
 
     if (enforceURL) {
-      webStr <- EnforceGetURL(infoUrl, FUN = getRUL)
+      webStr <-  EnforceGetURL(infoUrl, FUN = getURL)
     } else {
-      webStr <- getURL(infoUrl) 
+      webStr <- getURL(infoUrl)
     }
 
     geneAnno <- doTenInfo(webStr)

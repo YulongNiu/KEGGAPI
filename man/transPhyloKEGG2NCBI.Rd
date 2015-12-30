@@ -19,6 +19,10 @@ KEGG Database Additional API - Get the NCBI taxonomy ID from a given KEGG ID
 }
 \details{
 NCBI taxonomy ID is used as unique ID accoss KEGG and BioCyc databases. This functions is used to get the corresponding NCBI Taxonomy ID from KEGG.
+
+-------------------------
+I need to change it using KEGG API
+-------------------------
 }
 \examples{
 ## get human and Ecoli NCBI taxonomy ID with 2 threads

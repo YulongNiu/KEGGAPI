@@ -1,6 +1,11 @@
 ##' KEGG Database Additional API - Get the NCBI taxonomy ID from a given KEGG ID
 ##'
 ##' NCBI taxonomy ID is used as unique ID accoss KEGG and BioCyc databases. This functions is used to get the corresponding NCBI Taxonomy ID from KEGG.
+##'
+##' -------------------------
+##' I need to change it using KEGG API
+##' -------------------------
+##' 
 ##' @title Get NCBI Taxonomy ID From KEGG ID
 ##' @param specIDs A vector of KEGG species IDs, for example c('hsa', 'eco').
 ##' @inheritParams getKEGGGeneSeq
@@ -289,7 +294,7 @@ getKEGGGeneMotif <- function(geneID, hasAddInfo = FALSE) {
 ##' @inheritParams webTable 
 ##' @rdname KEGGMotifList
 ##' @return A matrix of KEGG genes and description
-##' @examples modifMat <- getKEGGMotifList('pf:DUF3675')
+##' @examples motifMat <- getKEGGMotifList('pf:DUF3675')
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom xml2 read_html xml_find_all xml_text
 ##' @importFrom stringr str_trim
@@ -298,12 +303,13 @@ getKEGGMotifList <- function(motifName, enforceURL = FALSE) {
 
   ## motif list url
   url <- paste0('http://www.genome.jp/dbget-bin/get_linkdb?-t+genes+', motifName)
+
   if (enforceURL) {
     motifXml <- EnforceGetURL(url, FUN = read_html)
   } else {
-    motifXml <- read_html(url)
+    motifXml <-  read_html(url)
   }
-
+  
   ## <pre>..Definition..</pre>
   ## remove head and tail blanks
   motifPath <- './/pre[contains(text(), "Definition")]/node()'
@@ -320,6 +326,7 @@ getKEGGMotifList <- function(motifName, enforceURL = FALSE) {
 
 
 ##' @inheritParams getKEGGGeneMotif
+##' @inheritParams webTable 
 ##' @rdname KEGGMotifList
 ##' @return A vector of protein names including UniProt and SWISS-PROT. Not all these "protID" have KEGG IDs. KEGG uses UniProt and SWISS-PROT for gene UniProt annotation.
 ##' @examples
@@ -333,14 +340,18 @@ getKEGGMotifList <- function(motifName, enforceURL = FALSE) {
 ##' @author Yulong Niu \email{niuylscu@@gmail.com}
 ##' @importFrom RCurl getURL
 ##' @export
-getKEGGMotifList2 <- function(motifName) {
+getKEGGMotifList2 <- function(motifName, enforceURL = FALSE) {
 
   ## motif list url
   url <- paste0('http://www.genome.jp/dbget-bin/get_linkdb?-t+9+', motifName)
 
   ## process webpage
-  webPage <- getURL(url)
-
+  if (enforceURL) {
+    webPage <- EnforceGetURL(url, FUN = getURL)
+  } else {
+    webPage <- read_html(url)
+  }
+  
   ## get the webpage contains uniprot information
   getUnipReg <- gregexpr('<a href="/dbget-bin/www_bget?.*?</a>', webPage)
   webPage <- getcontent(webPage, getUnipReg[[1]])
