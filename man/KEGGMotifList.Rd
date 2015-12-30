@@ -5,12 +5,14 @@
 \alias{getKEGGMotifList2}
 \title{Get motif list from KEGG.}
 \usage{
-getKEGGMotifList(motifName)
+getKEGGMotifList(motifName, enforceURL = FALSE)
 
-getKEGGMotifList2(motifName)
+getKEGGMotifList2(motifName, enforceURL = FALSE)
 }
 \arguments{
 \item{motifName}{A single KEGG motif ID}
+
+\item{enforceURL}{whether to enfoce get get url until the results returned. The default value is "FALSE".}
 }
 \value{
 A matrix of KEGG genes and description
@@ -24,7 +26,7 @@ KEGG Database Additional API - Get genes processing certain motif
 Get all the gene having certain motif.
 }
 \examples{
-modifMat <- getKEGGMotifList('pf:DUF3675')
+motifMat <- getKEGGMotifList('pf:DUF3675')
 pfUniprot <- getKEGGMotifList2('pf:DUF3675')
 \dontrun{
 # convert uniprot ID to KEGG IDs
